@@ -3,7 +3,7 @@ namespace Aura\Invoker;
 
 use Closure;
 
-class Manager
+class InvokerManager
 {
     use InvokeMethodTrait;
     
@@ -23,12 +23,23 @@ class Manager
         $method_param = null
     ) {
         $this->object_factory = $object_factory;
-        if ($object_param) {
-            $this->object_param = $object_param;
-        }
-        if ($method_param) {
-            $this->method_param = $method_param;
-        }
+        $this->setObjectParam($object_param);
+        $this->setMethodParam($method_param);
+    }
+    
+    public function setObjectParam($object_param)
+    {
+        $this->object_param = $object_param;
+    }
+    
+    public function setMethodParam($method_param)
+    {
+        $this->method_param = $method_param;
+    }
+    
+    public function getObjectFactory()
+    {
+        return $this->object_factory;
     }
     
     public function exec(array $params = [], $object = null, $method = null)
@@ -65,7 +76,7 @@ class Manager
         // is it actually an object?
         if (! is_object($this->object)) {
             // treat it as a spec for the factory
-            $this->object = $this->object_factory($this->object);
+            $this->object = $this->object_factory->newInstance($this->object);
         }
     }
     

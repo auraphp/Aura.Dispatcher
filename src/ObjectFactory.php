@@ -15,9 +15,19 @@ class ObjectFactory
         $this->map[$name] = $callable;
     }
     
+    public function get($name)
+    {
+        return $this->map[$name];
+    }
+    
+    public function has($name)
+    {
+        return isset($this->map[$name]);
+    }
+    
     public function newInstance($spec)
     {
-        $factory = $this->map[$spec];
-        return $factory();
+        $callable = $this->map[$spec];
+        return $callable();
     }
 }
