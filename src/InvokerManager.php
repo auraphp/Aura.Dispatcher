@@ -7,9 +7,9 @@ class InvokerManager
 {
     use InvokeMethodTrait;
     
-    protected $object_param = 'object';
+    protected $object_param;
     
-    protected $method_param = 'method';
+    protected $method_param;
     
     protected $object;
     
