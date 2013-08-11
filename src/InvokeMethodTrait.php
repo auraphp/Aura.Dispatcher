@@ -15,7 +15,8 @@ trait InvokeMethodTrait
     ) {
         // is the object a closure?
         if ($object instanceof Closure) {
-            // treat as a function, ignore $method value
+            // treat as a function; cf. https://bugs.php.net/bug.php?id=65432
+            // ignore $method value
             $reflect = new ReflectionFunction($object);
         } else {
             // is the method callable?
