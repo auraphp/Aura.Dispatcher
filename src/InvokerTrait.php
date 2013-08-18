@@ -27,13 +27,11 @@ trait InvokerTrait
 {
     /**
      * 
-     * Given an object, invokes a method on it, passing named parameters to
-     * that method; alternatively, invokes a closure using named parameters.
+     * Invokes an object method, passing named parameters to it.
      * 
-     * @param object $object The object (or Closure) to work with.
+     * @param object $object The object to work with.
      * 
-     * @param string $method The method to invoke on the object; this is
-     * ignored if the object is a closure.
+     * @param string $method The method to invoke on the object.
      * 
      * @param array $params An array of key-value pairs to use as params for
      * the method; the array keys are matched to the method param names.
@@ -41,11 +39,8 @@ trait InvokerTrait
      * @return mixed The return of the invoked object method.
      * 
      */
-    protected function invokeMethod(
-        $object,
-        $method,
-        array $params = []
-    ) {
+    protected function invokeMethod($object, $method, array $params = [])
+    {
         // is the method callable?
         if (! is_callable([$object, $method])) {
             $message = get_class($object) . '::' . $method;
@@ -75,6 +70,20 @@ trait InvokerTrait
         return $reflect->invokeArgs($object, $args);
     }
     
+    /**
+     * 
+     * Invokes a given Closure, passing named parameters to it.
+     * 
+     * @param object $object The object to work with.
+     * 
+     * @param string $method The method to invoke on the object.
+     * 
+     * @param array $params An array of key-value pairs to use as params for
+     * the method; the array keys are matched to the method param names.
+     * 
+     * @return mixed The return of the invoked object method.
+     * 
+     */
     protected function invokeClosure(Closure $closure, array $params = [])
     {
         // treat as a function; cf. https://bugs.php.net/bug.php?id=65432
