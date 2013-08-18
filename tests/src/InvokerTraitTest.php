@@ -1,9 +1,9 @@
 <?php
 namespace Aura\Invoker;
 
-class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
+class InvokerTraitTest extends \PHPUnit_Framework_TestCase
 {
-    use InvokeMethodTrait;
+    use InvokerTrait;
     
     public function testInvokeMethod_notCallable()
     {
@@ -12,7 +12,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         $this->invokeMethod($object, 'noSuchMethod');
     }
     
-    public function testInvokeMethod_object()
+    public function testInvokeMethod()
     {
         $object = new FakeObject;
         $expect = 'FOO BAR baz';
@@ -29,7 +29,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
             return "$foo $bar $baz";
         };
         $expect = 'FOO BAR baz';
-        $actual = $this->invokeMethod($closure, null, [
+        $actual = $this->invokeClosure($closure, [
             'foo' => 'FOO',
             'bar' => 'BAR',
         ]);

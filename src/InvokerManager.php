@@ -1,11 +1,20 @@
 <?php
+/**
+ * 
+ * This file is part of Aura for PHP.
+ * 
+ * @package Aura.Invoker
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ */
 namespace Aura\Invoker;
 
 use Closure;
 
 class InvokerManager
 {
-    use InvokeMethodTrait;
+    use InvokerTrait;
     
     protected $object_param;
     
@@ -51,6 +60,10 @@ class InvokerManager
         $this->fixObject();
         $this->fixMethod();
         
+        if ($this->object instanceof Closure) {
+            return $this->invokeClosure($this->object, $this->params);
+        }
+        
         return $this->invokeMethod(
             $this->object,
             $this->method,
@@ -82,9 +95,10 @@ class InvokerManager
     
     protected function fixMethod()
     {
-        // if the object is a closure, override the method
+        // if the object is a closure, no method is called
         if ($this->object instanceof Closure) {
-            $this->method = '__invoke';
+            $this->method = null;
+            return;
         }
         
         // are we missing the method?
