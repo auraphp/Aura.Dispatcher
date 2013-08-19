@@ -56,8 +56,8 @@ compliance oversights, please send a patch via pull request.
 Basic Usage
 -----------
 
-First, instantiate an `InvokerManager` as the central point for object creation
-and method invocation.
+First, instantiate an `InvokerManager` as the central point for object
+creation and method invocation.
 
 ```php
 <?php
@@ -99,4 +99,36 @@ Trait Usage
 -----------
 
 Sometimes your classes will have an intercessory method that picks an action
-to run.
+to run, either on itself or on another object.  The `InvokerTrait` provides
+two methods to help with that.
+
+```php
+<?php
+namespace Vendor\Package;
+
+use Aura\Invoker\InvokerTrait;
+
+class VendorPackageExecutor
+{
+    use InvokerTrait;
+    
+    // $params = [
+    //      'action' => 'read',
+    //      'id' => 88,
+    // ];
+    public function exec(array $params)
+    {
+        if (! isset($params['action'])) {
+            $params['action'] = 'index';
+        }
+        $method = 'action' . $params['action'];
+        return $this->invokeMethod($params, $this, $method);
+    }
+    
+    public function actionRead($id = null)
+    {
+        // ...
+    }
+}
+?>
+```

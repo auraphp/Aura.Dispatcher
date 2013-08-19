@@ -74,9 +74,7 @@ trait InvokerTrait
      * 
      * Invokes a given Closure, passing named parameters to it.
      * 
-     * @param object $object The object to work with.
-     * 
-     * @param string $method The method to invoke on the object.
+     * @param Closure $closure The closure to work with.
      * 
      * @param array $params An array of key-value pairs to use as params for
      * the method; the array keys are matched to the method param names.

@@ -23,7 +23,7 @@ class InvokerTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $actual);
     }
 
-    public function testInvokeMethod_closure()
+    public function testInvokeClosure()
     {
         $closure = function ($foo, $bar, $baz = 'baz') {
             return "$foo $bar $baz";
