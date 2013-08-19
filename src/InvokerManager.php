@@ -12,20 +12,76 @@ namespace Aura\Invoker;
 
 use Closure;
 
+/**
+ * 
+ * Manager over object creation and invocations.
+ * 
+ * @package Aura.Invoker
+ * 
+ */
 class InvokerManager
 {
     use InvokerTrait;
     
+    /**
+     * 
+     * The parameter name indicating what object to create from the factory.
+     * 
+     * @var string
+     * 
+     */
     protected $object_param;
     
+    /**
+     * 
+     * The parameter name indicating what method to invoke on the object.
+     * 
+     * @var string
+     * 
+     */
     protected $method_param;
     
+    /**
+     * 
+     * The object to work with.
+     * 
+     * @var object
+     * 
+     */
     protected $object;
     
+    /**
+     * 
+     * The method to invoke on the object.
+     * 
+     * @var string
+     * 
+     */
     protected $method;
     
+    /**
+     * 
+     * The params for the invocation.
+     * 
+     * @var array
+     * 
+     */
     protected $params;
     
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param ObjectFactory $object_factory A factory for creating objects to
+     * work with.
+     * 
+     * @param string $object_param The parameter name indicating what object
+     * to create from the factory.
+     * 
+     * @param string $method The parameter name indicating what method to call
+     * on the object.
+     * 
+     */
     public function __construct(
         ObjectFactory $object_factory,
         $object_param = null,
@@ -36,21 +92,64 @@ class InvokerManager
         $this->setMethodParam($method_param);
     }
     
+    /**
+     * 
+     * Sets the arameter name indicating what object to create from the
+     * factory.
+     * 
+     * @param string $object_param The parameter name to use.
+     * 
+     * @return null
+     * 
+     */
     public function setObjectParam($object_param)
     {
         $this->object_param = $object_param;
     }
     
+    /**
+     * 
+     * Sets the arameter name indicating what method to call on the object.
+     * 
+     * @param string $method_param The parameter name to use.
+     * 
+     * @return null
+     * 
+     */
     public function setMethodParam($method_param)
     {
         $this->method_param = $method_param;
     }
     
+    /**
+     * 
+     * Returns the object factory.
+     * 
+     * @return ObjectFactory
+     * 
+     */
     public function getObjectFactory()
     {
         return $this->object_factory;
     }
     
+    /**
+     * 
+     * Given a set of parameters, creates an object and invokes a method on
+     * it with the remaining named parameters.
+     * 
+     * @param array $params The parameters to use for creating the object from
+     * the factory and the method to call on it.
+     * 
+     * @param object $object An explicit object to use instead of creating it
+     * from the factory.
+     * 
+     * @param string $method An explicit method to call on the object instead
+     * of picking it from the params.
+     * 
+     * @return mixed The return from the invoked object method.
+     * 
+     */
     public function exec(array $params = [], $object = null, $method = null)
     {
         $this->params = $params;
@@ -71,6 +170,13 @@ class InvokerManager
         );
     }
     
+    /**
+     * 
+     * Makes sure the the $object property is set properly.
+     * 
+     * @return null
+     * 
+     */
     protected function fixObject()
     {
         // are we missing the object spec?
@@ -93,6 +199,13 @@ class InvokerManager
         }
     }
     
+    /**
+     * 
+     * Makes sure the the $method property is set properly.
+     * 
+     * @return null
+     * 
+     */
     protected function fixMethod()
     {
         // if the object is a closure, no method is called

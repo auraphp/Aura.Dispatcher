@@ -95,4 +95,18 @@ class InvokerManagerTest extends \PHPUnit_Framework_TestCase
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }
+    
+    public function testExec_closureParamValue()
+    {
+        $params = [
+            'controller' => function ($foo, $bar, $baz = 'baz') {
+                return "$foo $bar $baz";
+            },
+            'foo' => 'FOO',
+            'bar' => 'BAR',
+        ];
+        $actual = $this->invoker_manager->exec($params);
+        $expect = 'FOO BAR baz';
+        $this->assertSame($expect, $actual);
+    }
 }
