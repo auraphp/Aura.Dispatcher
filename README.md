@@ -2,9 +2,9 @@ Aura.Invoker
 ============
 
 The Aura.Invoker library provides tools to create objects from a factory, then
-invoke methods on them based on a configurable value. This is useful for
-invoking controller and command object methods based on path-info parameters
-or command line arguments.
+invoke methods on them based on a parameter value. This is useful for invoking
+controller and command object methods based on path-info parameters or command
+line arguments.
 
 ### Installation and Autoloading
 
@@ -68,3 +68,35 @@ $invoker = new InvokerManager(new ObjectFactory);
 ?>
 ```
 
+Next, get the object factory from the manager, and load it with named
+callables to create objects.
+
+```php
+<?php
+$factory = $invoker->getObjectFactory();
+$factory->set('blog', function () {
+    return new \Vendor\Package\BlogController;
+});
+?>
+```
+
+Finally, given a set of params (e.g. from a web router) you can now invoke a
+method on the object automatically:
+
+```php
+<?php
+$invoker->setObjectParam('controller');
+$invoker->setMethodParam('action');
+$params = ['controller' => 'blog', 'action' => 'read', 'id' => '88'];
+$result = $invoker->exec($params);
+// equivalent to:
+// $blog_controller = new BlogController;
+// $result = $blog_controller->read('88');
+?>
+```
+
+Trait Usage
+-----------
+
+Sometimes your classes will have an intercessory method that picks an action
+to run.
