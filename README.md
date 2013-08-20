@@ -90,7 +90,7 @@ $invoker->setMethodParam('action');
 $params = ['controller' => 'blog', 'action' => 'read', 'id' => '88'];
 $result = $invoker->exec($params);
 // equivalent to:
-// $blog_controller = new BlogController;
+// $blog_controller = new \Vendor\Package\BlogController;
 // $result = $blog_controller->read('88');
 ?>
 ```
