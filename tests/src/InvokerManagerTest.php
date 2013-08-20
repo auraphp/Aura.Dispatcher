@@ -16,7 +16,7 @@ class InvokerManagerTest extends \PHPUnit_Framework_TestCase
                 };
             },
             'object' => function () {
-                return new FakeObject;
+                return new MockBase;
             },
         ]);
         
@@ -37,7 +37,7 @@ class InvokerManagerTest extends \PHPUnit_Framework_TestCase
     {
         $params = [
             'controller' => 'object',
-            'action' => 'foobarbaz',
+            'action' => 'publicMethod',
             'foo' => 'FOO',
             'bar' => 'BAR',
         ];
@@ -76,9 +76,9 @@ class InvokerManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->invoker_manager->setObjectParam(null);
         $this->invoker_manager->setMethodParam(null);
-        $object = new FakeObject;
+        $object = new MockBase;
         $params = ['foo' => 'FOO', 'bar' => 'BAR'];
-        $actual = $this->invoker_manager->exec($params, $object, 'foobarbaz');
+        $actual = $this->invoker_manager->exec($params, $object, 'publicMethod');
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }

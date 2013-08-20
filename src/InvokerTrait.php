@@ -27,7 +27,8 @@ trait InvokerTrait
 {
     /**
      * 
-     * Invokes an object method, passing named parameters to it.
+     * Invokes an object method, passing named parameters to it; honors method
+     * scope (protected/private) relative to $this.
      * 
      * @param object $object The object to work with.
      * 
@@ -41,14 +42,34 @@ trait InvokerTrait
      */
     protected function invokeMethod($object, $method, array $params = [])
     {
-        // is the method callable?
-        if (! is_callable([$object, $method])) {
+        // is the method defined?
+        if (! method_exists($object, $method)) {
             $message = get_class($object) . '::' . $method;
-            throw new BadMethodCallException($message);
+            throw new Exception\MethodNotDefined($message);
         }
         
         // reflect on the object method
         $reflect = new ReflectionMethod($object, $method);
+        
+        // check accessibility from $this to honor protected/private methods
+        $accessible = true;
+        if ($reflect->isProtected()) {
+            $access = 'protected';
+            $accessible = ($object instanceof $this);
+        } elseif ($reflect->isPrivate()) {
+            $access = 'private';
+            $declaring_class = $reflect->getDeclaringClass()->getName();
+            $accessible = ($declaring_class == get_class($this));
+        }
+        
+        // is the method accessible by $this?
+        if (! $accessible) {
+            $message = get_class($object) . "::$method is $access";
+            throw new Exception\MethodNotAccessible($message);
+        }
+        
+        // the method is accessible by $this
+        $reflect->setAccessible(true);
         
         // sequential arguments when invoking
         $args = [];
