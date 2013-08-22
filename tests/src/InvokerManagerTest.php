@@ -3,13 +3,13 @@ namespace Aura\Invoker;
 
 class InvokerManagerTest extends \PHPUnit_Framework_TestCase
 {
-    protected $invoker_manager;
+    protected $invoker;
     
-    protected $object_factory;
+    protected $factories;
     
     protected function setUp()
     {
-        $this->object_factory = new ObjectFactory([
+        $this->factories = [
             'closure' => function () {
                 return function ($foo, $bar, $baz = 'baz') {
                     return "$foo $bar $baz";
@@ -18,19 +18,62 @@ class InvokerManagerTest extends \PHPUnit_Framework_TestCase
             'object' => function () {
                 return new MockBase;
             },
-        ]);
+        ];
         
-        $this->invoker_manager = new InvokerManager(
-            $this->object_factory,
+        $this->invoker = new InvokerManager(
+            $this->factories,
             'controller',
             'action'
         );
     }
     
-    public function testGetObjectFactory()
+    public function testFactories()
     {
-        $actual = $this->invoker_manager->getObjectFactory();
-        $this->assertSame($this->object_factory, $actual);
+        $foo_factory = function () {
+            return function () {
+                echo 'FOO!';
+            };
+        };
+        
+        $this->assertFalse($this->invoker->hasFactory('foo'));
+        
+        $this->invoker->setFactory('foo', $foo_factory);
+        $this->assertTrue($this->invoker->hasFactory('foo'));
+        
+        $actual = $this->invoker->getFactory('foo');
+        $this->assertSame($foo_factory, $actual);
+        
+        $actual = $this->invoker->getFactories();
+        $expect = array_merge($this->factories, ['foo' => $foo_factory]);
+        $this->assertSame($expect, $actual);
+        
+        $bar_factory = function () {
+            return function () {
+                echo 'BAR!';
+            };
+        };
+        
+        $this->invoker->addFactories(['bar' => $bar_factory]);
+        $actual = $this->invoker->getFactories();
+        $expect = array_merge($this->factories, [
+            'foo' => $foo_factory,
+            'bar' => $bar_factory,
+        ]);
+        $this->assertSame($expect, $actual);
+        
+        $this->setExpectedException('Aura\Invoker\Exception\FactoryNotDefined');
+        $this->invoker->getFactory('NoSuchFactory');
+    }
+    
+    public function testParams()
+    {
+        $this->invoker->setObjectParam('foo');
+        $actual = $this->invoker->getObjectParam();
+        $this->assertSame('foo', $actual);
+        
+        $this->invoker->setMethodParam('bar');
+        $actual = $this->invoker->getMethodParam();
+        $this->assertSame('bar', $actual);
     }
     
     public function testExec_objectViaParams()
@@ -41,7 +84,7 @@ class InvokerManagerTest extends \PHPUnit_Framework_TestCase
             'foo' => 'FOO',
             'bar' => 'BAR',
         ];
-        $actual = $this->invoker_manager->exec($params);
+        $actual = $this->invoker->exec($params);
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }
@@ -50,14 +93,14 @@ class InvokerManagerTest extends \PHPUnit_Framework_TestCase
     {
         $params = [];
         $this->setExpectedException('Aura\Invoker\Exception\ObjectNotSpecified');
-        $this->invoker_manager->exec($params);
+        $this->invoker->exec($params);
     }
     
     public function testExec_noMethodViaParams()
     {
         $params = ['controller' => 'object'];
         $this->setExpectedException('Aura\Invoker\Exception\MethodNotSpecified');
-        $this->invoker_manager->exec($params);
+        $this->invoker->exec($params);
     }
     
     public function testExec_closureViaParams()
@@ -67,31 +110,31 @@ class InvokerManagerTest extends \PHPUnit_Framework_TestCase
             'foo' => 'FOO',
             'bar' => 'BAR',
         ];
-        $actual = $this->invoker_manager->exec($params);
+        $actual = $this->invoker->exec($params);
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }
     
     public function testExec_explicitObjectAndMethod()
     {
-        $this->invoker_manager->setObjectParam(null);
-        $this->invoker_manager->setMethodParam(null);
+        $this->invoker->setObjectParam(null);
+        $this->invoker->setMethodParam(null);
         $object = new MockBase;
         $params = ['foo' => 'FOO', 'bar' => 'BAR'];
-        $actual = $this->invoker_manager->exec($params, $object, 'publicMethod');
+        $actual = $this->invoker->exec($params, $object, 'publicMethod');
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }
     
     public function testExec_explicitClosure()
     {
-        $this->invoker_manager->setObjectParam(null);
-        $this->invoker_manager->setMethodParam(null);
+        $this->invoker->setObjectParam(null);
+        $this->invoker->setMethodParam(null);
         $closure = function ($foo, $bar, $baz = 'baz') {
             return "$foo $bar $baz";
         };
         $params = ['foo' => 'FOO', 'bar' => 'BAR'];
-        $actual = $this->invoker_manager->exec($params, $closure);
+        $actual = $this->invoker->exec($params, $closure);
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }
@@ -105,7 +148,7 @@ class InvokerManagerTest extends \PHPUnit_Framework_TestCase
             'foo' => 'FOO',
             'bar' => 'BAR',
         ];
-        $actual = $this->invoker_manager->exec($params);
+        $actual = $this->invoker->exec($params);
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }

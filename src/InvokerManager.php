@@ -83,19 +83,125 @@ class InvokerManager
      * 
      */
     public function __construct(
-        ObjectFactory $object_factory,
+        array $factories = [],
         $object_param = null,
         $method_param = null
     ) {
-        $this->object_factory = $object_factory;
+        $this->setFactories($factories);
         $this->setObjectParam($object_param);
         $this->setMethodParam($method_param);
     }
     
     /**
      * 
-     * Sets the arameter name indicating what object to create from the
-     * factory.
+     * Set the factories that create named objects; this clears out all
+     * previous factories.
+     * 
+     * @param array $factories An array where the key is an object name and
+     * the value is a callable that returns a new instance of that object.
+     * 
+     * @return null
+     * 
+     */
+    public function setFactories(array $factories)
+    {
+        $this->factories = $factories;
+    }
+
+    /**
+     * 
+     * Adds to the factories that create named objects; this merges with the
+     * previous factories.
+     * 
+     * @param array $factories An array where the key is an object name and
+     * the value is a callable that returns a new instance of that object.
+     * 
+     * @return null
+     * 
+     */
+    public function addFactories(array $factories)
+    {
+        $this->factories = array_merge($this->factories, $factories);
+    }
+    
+    /**
+     * 
+     * Returns the array of named object factories.
+     * 
+     * @return array
+     * 
+     */
+    public function getFactories()
+    {
+        return $this->factories;
+    }
+    
+    /**
+     * 
+     * Sets the factory for one named object.
+     * 
+     * @param string $name The object name.
+     * 
+     * @param callable $factory A callable that returns a new instance of the
+     * object.
+     * 
+     */
+    public function setFactory($name, $factory)
+    {
+        $this->factories[$name] = $factory;
+    }
+    
+    /**
+     * 
+     * Does a factory exist for a named object?
+     * 
+     * @param string $name The named object.
+     * 
+     * @return bool
+     * 
+     */
+    public function hasFactory($name)
+    {
+        return isset($this->factories[$name]);
+    }
+    
+    /**
+     * 
+     * Returns a single factory by name.
+     * 
+     * @param string $name The object factory name.
+     * 
+     * @return callable
+     * 
+     */
+    public function getFactory($name)
+    {
+        if ($this->hasFactory($name)) {
+            return $this->factories[$name];
+        }
+        
+        throw new Exception\FactoryNotDefined($name);
+    }
+    
+    /**
+     * 
+     * Returns a new instance of the named object using its factory callable.
+     * 
+     * @param string $name The object name.
+     * 
+     * @return object A new instance of the named object.
+     * 
+     */
+    public function newInstance($name)
+    {
+        $factory = $this->getFactory($name);
+        return $factory();
+    }
+    
+    /**
+     * 
+     * Sets the parameter name indicating what object to create from the
+     * factories.
      * 
      * @param string $object_param The parameter name to use.
      * 
@@ -109,7 +215,20 @@ class InvokerManager
     
     /**
      * 
-     * Sets the arameter name indicating what method to call on the object.
+     * Gets the parameter name indicating what object to create from the
+     * factories.
+     * 
+     * @return string
+     * 
+     */
+    public function getObjectParam()
+    {
+        return $this->object_param;
+    }
+    
+    /**
+     * 
+     * Sets the parameter name indicating what method to call on the object.
      * 
      * @param string $method_param The parameter name to use.
      * 
@@ -123,14 +242,14 @@ class InvokerManager
     
     /**
      * 
-     * Returns the object factory.
+     * Gets the parameter name indicating what method to call on the object.
      * 
-     * @return ObjectFactory
+     * @return string
      * 
      */
-    public function getObjectFactory()
+    public function getMethodParam()
     {
-        return $this->object_factory;
+        return $this->method_param;
     }
     
     /**
@@ -138,31 +257,34 @@ class InvokerManager
      * Given a set of parameters, creates an object and invokes a method on
      * it with the remaining named parameters.
      * 
-     * @param array $params The parameters to use for creating the object from
-     * the factory and the method to call on it.
+     * @param array $params The parameters to use for invoking the object
+     * method; these may contain a param indicating what object to create and
+     * what method to call on it.
      * 
      * @param object $object An explicit object to use instead of creating it
-     * from the factory.
+     * from the factories; this overrides any param indicating what object to
+     * create from the factories.
      * 
      * @param string $method An explicit method to call on the object instead
-     * of picking it from the params.
+     * of picking it from the params; if the object is a Closure, this value
+     * will be ignored.
      * 
      * @return mixed The return from the invoked object method.
      * 
      */
     public function exec(array $params = [], $object = null, $method = null)
     {
-        $this->params = $params;
-        $this->object = $object;
-        $this->method = $method;
+        // set these properties in order
+        $this->setParams($params);
+        $this->setObject($object);
+        $this->setMethod($method);
         
-        $this->fixObject();
-        $this->fixMethod();
-        
+        // if the object is already a closure, invoke it directly
         if ($this->object instanceof Closure) {
             return $this->invokeClosure($this->object, $this->params);
         }
         
+        // otherwise, invoke a method on the object with named params
         return $this->invokeMethod(
             $this->object,
             $this->method,
@@ -172,13 +294,29 @@ class InvokerManager
     
     /**
      * 
+     * Makes sure the the $params property is set properly.
+     * 
+     * @return null
+     * 
+     */
+    protected function setParams(array $params)
+    {
+        // set the property
+        $this->params = $params;
+    }
+    
+    /**
+     * 
      * Makes sure the the $object property is set properly.
      * 
      * @return null
      * 
      */
-    protected function fixObject()
+    protected function setObject($object)
     {
+        // set the property
+        $this->object = $object;
+        
         // are we missing the object spec?
         if (! $this->object) {
             // no, set it from the params
@@ -195,7 +333,7 @@ class InvokerManager
         // is it actually an object?
         if (! is_object($this->object)) {
             // treat it as a spec for the factory
-            $this->object = $this->object_factory->newInstance($this->object);
+            $this->object = $this->newInstance($this->object);
         }
     }
     
@@ -206,8 +344,11 @@ class InvokerManager
      * @return null
      * 
      */
-    protected function fixMethod()
+    protected function setMethod($method)
     {
+        // set the property
+        $this->method = $method;
+        
         // if the object is a closure, no method is called
         if ($this->object instanceof Closure) {
             $this->method = null;
