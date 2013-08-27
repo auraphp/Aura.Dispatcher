@@ -14,11 +14,11 @@ use Aura\Invoker\Exception;
 
 /**
  * 
- * The requested invokable name has not been defined.
+ * The invokable object name has not been defined.
  * 
  * @package Aura.Invoker
  * 
  */
-class FactoryNotDefined extends Exception
+class ObjectNotDefined extends Exception
 {    
 }

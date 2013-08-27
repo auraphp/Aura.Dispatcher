@@ -1,9 +1,9 @@
 <?php
 namespace Aura\Invoker;
 
-class InvokerTraitTest extends \PHPUnit_Framework_TestCase
+class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
 {
-    use InvokerTrait;
+    use InvokeMethodTrait;
     
     public function testInvokeMethod_notCallable()
     {
@@ -105,18 +105,5 @@ class InvokerTraitTest extends \PHPUnit_Framework_TestCase
                 'bar' => 'BAR',
             ]
         );
-    }
-    
-    public function testInvokeClosure()
-    {
-        $closure = function ($foo, $bar, $baz = 'baz') {
-            return "$foo $bar $baz";
-        };
-        $expect = 'FOO BAR baz';
-        $actual = $this->invokeClosure($closure, [
-            'foo' => 'FOO',
-            'bar' => 'BAR',
-        ]);
-        $this->assertSame($expect, $actual);
     }
 }

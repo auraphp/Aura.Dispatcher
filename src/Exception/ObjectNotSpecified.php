@@ -14,7 +14,7 @@ use Aura\Invoker\Exception;
 
 /**
  * 
- * The object to be used for invocation was not specified.
+ * The invokable object was not specified in the params.
  * 
  * @package Aura.Invoker
  * 

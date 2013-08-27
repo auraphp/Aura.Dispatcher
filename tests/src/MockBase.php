@@ -3,7 +3,7 @@ namespace Aura\Invoker;
 
 class MockBase
 {
-    use InvokerTrait;
+    use InvokeMethodTrait;
     
     public function exec($method, array $params = [])
     {
