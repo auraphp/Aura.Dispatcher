@@ -87,6 +87,13 @@ class FactoryInvokerTest extends \PHPUnit_Framework_TestCase
         $this->invoker->__invoke($params);
     }
     
+    public function testInvoke_objectNotDefined()
+    {
+        $params = ['controller' => 'undefined_object'];
+        $this->setExpectedException('Aura\Invoker\Exception\ObjectNotDefined');
+        $this->invoker->__invoke($params);
+    }
+    
     public function testInvoke_methodNotSpecified()
     {
         $params = ['controller' => 'mock_base'];
