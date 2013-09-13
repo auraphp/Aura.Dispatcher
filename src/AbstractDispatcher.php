@@ -12,7 +12,7 @@ namespace Aura\Dispatcher;
 
 /**
  * 
- * Base class for other invokers.
+ * Base class for other dispatchers.
  * 
  * @package Aura.Dispatcher
  * 

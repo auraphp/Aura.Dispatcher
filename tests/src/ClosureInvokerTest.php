@@ -3,7 +3,7 @@ namespace Aura\Dispatcher;
 
 class ClosureDispatcherTest extends \PHPUnit_Framework_TestCase
 {
-    protected $invoker;
+    protected $dispatcher;
     
     protected $objects;
     
@@ -15,7 +15,7 @@ class ClosureDispatcherTest extends \PHPUnit_Framework_TestCase
             },
         ];
         
-        $this->invoker = new ClosureDispatcher(
+        $this->dispatcher = new ClosureDispatcher(
             $this->objects,
             'controller',
             'action'
@@ -29,7 +29,7 @@ class ClosureDispatcherTest extends \PHPUnit_Framework_TestCase
             'foo' => 'FOO',
             'bar' => 'BAR',
         ];
-        $actual = $this->invoker->__invoke($params);
+        $actual = $this->dispatcher->__invoke($params);
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }
@@ -43,7 +43,7 @@ class ClosureDispatcherTest extends \PHPUnit_Framework_TestCase
             'foo' => 'FOO',
             'bar' => 'BAR',
         ];
-        $actual = $this->invoker->__invoke($params);
+        $actual = $this->dispatcher->__invoke($params);
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }

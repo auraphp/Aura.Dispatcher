@@ -10,7 +10,7 @@ based on path-info parameters or command line arguments.
 ### Installation and Autoloading
 
 This library is installable via Composer and is registered on Packagist at
-<https://packagist.org/packages/aura/invoker>. Installing via Composer will
+<https://packagist.org/packages/aura/dispatcher>. Installing via Composer will
 set up autoloading automatically.
 
 Alternatively, download or clone this repository, then require or include its
@@ -71,7 +71,7 @@ creation and method invocation.
 <?php
 use Aura\Dispatcher\FactoryDispatcher;
 
-$invoker = new FactoryDispatcher;
+$dispatcher = new FactoryDispatcher;
 ?>
 ```
 
@@ -79,26 +79,26 @@ Next, load it with factories that create objects.
 
 ```php
 <?php
-$invoker->setObject('blog', function () {
+$dispatcher->setObject('blog', function () {
     return new \Vendor\Package\BlogController;
 });
 ?>
 ```
 
 Finally, given a set of params (e.g. from a web router), you can now use the
-invoker to create an object via its factory and invoke a method on the created
+dispatcher to create an object via its factory and invoke a method on the created
 object:
 
 ```php
 <?php
-$invoker->setObjectParam('controller');
-$invoker->setMethodParam('action');
+$dispatcher->setObjectParam('controller');
+$dispatcher->setMethodParam('action');
 $params = [
     'controller' => 'blog',
     'action' => 'read',
     'id' => '88'
 ];
-$result = $invoker($params);
+$result = $dispatcher($params);
 // equivalent to:
 // $blog_controller = new \Vendor\Package\BlogController;
 // $result = $blog_controller->read('88');

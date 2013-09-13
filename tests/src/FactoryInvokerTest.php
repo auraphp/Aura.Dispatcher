@@ -3,7 +3,7 @@ namespace Aura\Dispatcher;
 
 class FactoryDispatcherTest extends \PHPUnit_Framework_TestCase
 {
-    protected $invoker;
+    protected $dispatcher;
     
     protected $objects;
     
@@ -15,7 +15,7 @@ class FactoryDispatcherTest extends \PHPUnit_Framework_TestCase
             },
         ];
         
-        $this->invoker = new FactoryDispatcher(
+        $this->dispatcher = new FactoryDispatcher(
             $this->objects,
             'controller',
             'action'
@@ -28,15 +28,15 @@ class FactoryDispatcherTest extends \PHPUnit_Framework_TestCase
             return new MockBase;
         };
         
-        $this->assertFalse($this->invoker->hasObject('foo'));
+        $this->assertFalse($this->dispatcher->hasObject('foo'));
         
-        $this->invoker->setObject('foo', $foo);
-        $this->assertTrue($this->invoker->hasObject('foo'));
+        $this->dispatcher->setObject('foo', $foo);
+        $this->assertTrue($this->dispatcher->hasObject('foo'));
         
-        $actual = $this->invoker->getObjectByName('foo');
+        $actual = $this->dispatcher->getObjectByName('foo');
         $this->assertInstanceOf('Aura\Dispatcher\MockBase', $actual);
         
-        $actual = $this->invoker->getObjects();
+        $actual = $this->dispatcher->getObjects();
         $expect = array_merge($this->objects, ['foo' => $foo]);
         $this->assertSame($expect, $actual);
         
@@ -44,8 +44,8 @@ class FactoryDispatcherTest extends \PHPUnit_Framework_TestCase
             return new MockExtended;
         };
         
-        $this->invoker->addObjects(['bar' => $bar]);
-        $actual = $this->invoker->getObjects();
+        $this->dispatcher->addObjects(['bar' => $bar]);
+        $actual = $this->dispatcher->getObjects();
         $expect = array_merge($this->objects, [
             'foo' => $foo,
             'bar' => $bar,
@@ -53,17 +53,17 @@ class FactoryDispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $actual);
         
         $this->setExpectedException('Aura\Dispatcher\Exception\ObjectNotDefined');
-        $this->invoker->getObjectByName('NoSuchCallable');
+        $this->dispatcher->getObjectByName('NoSuchCallable');
     }
     
     public function testParams()
     {
-        $this->invoker->setObjectParam('foo');
-        $actual = $this->invoker->getObjectParam();
+        $this->dispatcher->setObjectParam('foo');
+        $actual = $this->dispatcher->getObjectParam();
         $this->assertSame('foo', $actual);
         
-        $this->invoker->setMethodParam('bar');
-        $actual = $this->invoker->getMethodParam();
+        $this->dispatcher->setMethodParam('bar');
+        $actual = $this->dispatcher->getMethodParam();
         $this->assertSame('bar', $actual);
     }
     
@@ -75,7 +75,7 @@ class FactoryDispatcherTest extends \PHPUnit_Framework_TestCase
             'foo' => 'FOO',
             'bar' => 'BAR',
         ];
-        $actual = $this->invoker->__invoke($params);
+        $actual = $this->dispatcher->__invoke($params);
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }
@@ -84,21 +84,21 @@ class FactoryDispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $params = [];
         $this->setExpectedException('Aura\Dispatcher\Exception\ObjectNotSpecified');
-        $this->invoker->__invoke($params);
+        $this->dispatcher->__invoke($params);
     }
     
     public function testInvoke_objectNotDefined()
     {
         $params = ['controller' => 'undefined_object'];
         $this->setExpectedException('Aura\Dispatcher\Exception\ObjectNotDefined');
-        $this->invoker->__invoke($params);
+        $this->dispatcher->__invoke($params);
     }
     
     public function testInvoke_methodNotSpecified()
     {
         $params = ['controller' => 'mock_base'];
         $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotSpecified');
-        $this->invoker->__invoke($params);
+        $this->dispatcher->__invoke($params);
     }
     
     public function testInvoke_factoryInParams()
@@ -111,7 +111,7 @@ class FactoryDispatcherTest extends \PHPUnit_Framework_TestCase
             'foo' => 'FOO',
             'bar' => 'BAR',
         ];
-        $actual = $this->invoker->__invoke($params);
+        $actual = $this->dispatcher->__invoke($params);
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }

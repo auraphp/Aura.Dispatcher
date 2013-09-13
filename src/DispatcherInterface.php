@@ -12,7 +12,7 @@ namespace Aura\Dispatcher;
 
 /**
  * 
- * Interface for invokers.
+ * Interface for dispatchers.
  * 
  * @package Aura.Dispatcher
  * 
