@@ -1,5 +1,5 @@
 <?php
-namespace Aura\Invoker;
+namespace Aura\Dispatcher;
 
 class InvokeClosureTraitTest extends \PHPUnit_Framework_TestCase
 {

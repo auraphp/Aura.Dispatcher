@@ -1,5 +1,5 @@
 <?php
-namespace Aura\Invoker;
+namespace Aura\Dispatcher;
 
 class MockBase
 {

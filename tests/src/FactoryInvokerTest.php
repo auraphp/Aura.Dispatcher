@@ -1,7 +1,7 @@
 <?php
-namespace Aura\Invoker;
+namespace Aura\Dispatcher;
 
-class FactoryInvokerTest extends \PHPUnit_Framework_TestCase
+class FactoryDispatcherTest extends \PHPUnit_Framework_TestCase
 {
     protected $invoker;
     
@@ -15,7 +15,7 @@ class FactoryInvokerTest extends \PHPUnit_Framework_TestCase
             },
         ];
         
-        $this->invoker = new FactoryInvoker(
+        $this->invoker = new FactoryDispatcher(
             $this->objects,
             'controller',
             'action'
@@ -34,7 +34,7 @@ class FactoryInvokerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->invoker->hasObject('foo'));
         
         $actual = $this->invoker->getObjectByName('foo');
-        $this->assertInstanceOf('Aura\Invoker\MockBase', $actual);
+        $this->assertInstanceOf('Aura\Dispatcher\MockBase', $actual);
         
         $actual = $this->invoker->getObjects();
         $expect = array_merge($this->objects, ['foo' => $foo]);
@@ -52,7 +52,7 @@ class FactoryInvokerTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertSame($expect, $actual);
         
-        $this->setExpectedException('Aura\Invoker\Exception\ObjectNotDefined');
+        $this->setExpectedException('Aura\Dispatcher\Exception\ObjectNotDefined');
         $this->invoker->getObjectByName('NoSuchCallable');
     }
     
@@ -83,21 +83,21 @@ class FactoryInvokerTest extends \PHPUnit_Framework_TestCase
     public function testInvoke_objectNotSpecified()
     {
         $params = [];
-        $this->setExpectedException('Aura\Invoker\Exception\ObjectNotSpecified');
+        $this->setExpectedException('Aura\Dispatcher\Exception\ObjectNotSpecified');
         $this->invoker->__invoke($params);
     }
     
     public function testInvoke_objectNotDefined()
     {
         $params = ['controller' => 'undefined_object'];
-        $this->setExpectedException('Aura\Invoker\Exception\ObjectNotDefined');
+        $this->setExpectedException('Aura\Dispatcher\Exception\ObjectNotDefined');
         $this->invoker->__invoke($params);
     }
     
     public function testInvoke_methodNotSpecified()
     {
         $params = ['controller' => 'mock_base'];
-        $this->setExpectedException('Aura\Invoker\Exception\MethodNotSpecified');
+        $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotSpecified');
         $this->invoker->__invoke($params);
     }
     

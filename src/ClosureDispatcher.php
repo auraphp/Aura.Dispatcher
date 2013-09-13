@@ -3,12 +3,12 @@
  * 
  * This file is part of Aura for PHP.
  * 
- * @package Aura.Invoker
+ * @package Aura.Dispatcher
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  */
-namespace Aura\Invoker;
+namespace Aura\Dispatcher;
 
 use Closure;
 
@@ -17,10 +17,10 @@ use Closure;
  * Uses each invokable object as a closure; invokes the closure using named
  * parameters.
  * 
- * @package Aura.Invoker
+ * @package Aura.Dispatcher
  * 
  */
-class ClosureInvoker extends AbstractInvoker
+class ClosureDispatcher extends AbstractDispatcher
 {
     use InvokeClosureTrait;
     

@@ -1,8 +1,8 @@
-# Aura.Invoker
+# Aura.Dispatcher
 
 ## Overview
 
-The Aura.Invoker library provides tools to map names to invokable objects
+The Aura.Dispatcher library provides tools to map names to invokable objects
 (whether closures or factories), then invoke those objects using named
 parameters. This is useful for invoking controller and command object methods
 based on path-info parameters or command line arguments.
@@ -22,7 +22,7 @@ As with all Aura libraries, this library has no external dependencies.
 
 ### Tests
 
-[![Build Status](https://travis-ci.org/auraphp/Aura.Invoker.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Invoker)
+[![Build Status](https://travis-ci.org/auraphp/Aura.Dispatcher.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Dispatcher)
 
 This library has 100% code coverage. To run the library tests, first install
 [PHPUnit][], then go to the library _tests_ directory and issue `phpunit` at
@@ -64,14 +64,14 @@ TBD.
  
 ### Invoking Objects Via Factories
 
-First, instantiate an `FactoryInvoker` as the central point for object
+First, instantiate an `FactoryDispatcher` as the central point for object
 creation and method invocation.
 
 ```php
 <?php
-use Aura\Invoker\FactoryInvoker;
+use Aura\Dispatcher\FactoryDispatcher;
 
-$invoker = new FactoryInvoker;
+$invoker = new FactoryDispatcher;
 ?>
 ```
 
@@ -120,7 +120,7 @@ scopes.)
 <?php
 namespace Vendor\Package;
 
-use Aura\Invoker\InvokeMethodTrait;
+use Aura\Dispatcher\InvokeMethodTrait;
 
 class VendorPackageExecutor
 {

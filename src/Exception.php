@@ -3,18 +3,18 @@
  * 
  * This file is part of Aura for PHP.
  * 
- * @package Aura.Invoker
+ * @package Aura.Dispatcher
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  */
-namespace Aura\Invoker;
+namespace Aura\Dispatcher;
 
 /**
  * 
  * A generic package-level exception.
  * 
- * @package Aura.Invoker
+ * @package Aura.Dispatcher
  * 
  */
 class Exception extends \Exception

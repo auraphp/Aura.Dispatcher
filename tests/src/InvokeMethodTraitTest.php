@@ -1,5 +1,5 @@
 <?php
-namespace Aura\Invoker;
+namespace Aura\Dispatcher;
 
 class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -8,7 +8,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     public function testInvokeMethod_notCallable()
     {
         $object = new MockBase;
-        $this->setExpectedException('Aura\Invoker\Exception\MethodNotDefined');
+        $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotDefined');
         $object->exec('noSuchMethod');
     }
     
@@ -69,7 +69,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         // fails on external call
         $object = new MockExtended;
         $expect = 'FOO BAR baz';
-        $this->setExpectedException('Aura\Invoker\Exception\MethodNotAccessible');
+        $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotAccessible');
         $actual = $this->invokeMethod(
             $object,
             'protectedMethod',
@@ -97,7 +97,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         // fails on extended object
         $object = new MockExtended;
         $expect = 'FOO BAR baz';
-        $this->setExpectedException('Aura\Invoker\Exception\MethodNotAccessible');
+        $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotAccessible');
         $actual = $object->exec(
             'privateMethod',
             [

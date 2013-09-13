@@ -3,12 +3,12 @@
  * 
  * This file is part of Aura for PHP.
  * 
- * @package Aura.Invoker
+ * @package Aura.Dispatcher
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  */
-namespace Aura\Invoker;
+namespace Aura\Dispatcher;
 
 use ReflectionMethod;
 
@@ -17,7 +17,7 @@ use ReflectionMethod;
  * Invokes an object method with named parameters, honoring method scope
  * relative to `$this`.
  * 
- * @package Aura.Invoker
+ * @package Aura.Dispatcher
  * 
  */
 trait InvokeMethodTrait

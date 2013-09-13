@@ -1,7 +1,7 @@
 <?php
-namespace Aura\Invoker;
+namespace Aura\Dispatcher;
 
-class ClosureInvokerTest extends \PHPUnit_Framework_TestCase
+class ClosureDispatcherTest extends \PHPUnit_Framework_TestCase
 {
     protected $invoker;
     
@@ -15,7 +15,7 @@ class ClosureInvokerTest extends \PHPUnit_Framework_TestCase
             },
         ];
         
-        $this->invoker = new ClosureInvoker(
+        $this->invoker = new ClosureDispatcher(
             $this->objects,
             'controller',
             'action'
