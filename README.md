@@ -2,10 +2,11 @@
 
 ## Overview
 
-The Aura.Dispatcher library provides tools to map names to dispatchable objects
-(whether closures or factories), then invoke those objects using named
-parameters. This is useful for invoking controller and command object methods
-based on path-info parameters or command line arguments.
+The Aura.Dispatcher library provides tools to map names to dispatchable
+objects, then dispatch to those objects using named parameters. This is useful
+for invoking controller and command object methods based on path-info
+parameters or command line arguments, as well as dispatching to closure-based
+controllers and building the objects to be dispatched from factories.
 
 ### Installation and Autoloading
 
@@ -58,20 +59,33 @@ compliance oversights, please send a patch via pull request.
 
 ## Basic Usage
 
+REWRITE THIS README ENTIRELY.
+
+Cover the following:
+
+- Dispatch using a param directly (i.e., the param is a closure, an object
+  with the right method, or an invokable object)
+
+- Dispatch using a closure named by a param
+
+- Building factories, whether by closures or by invokable object
+
+- Describe the recursive dispatch process
+  
 ### Invoking Closures
 
 TBD.
  
-### Invoking Objects Via Factories
+### Adding Dispatchable Objects
 
-First, instantiate an `FactoryDispatcher` as the central point for object
+First, instantiate an `Dispatcher` as the central point for object
 creation and method invocation.
 
 ```php
 <?php
-use Aura\Dispatcher\FactoryDispatcher;
+use Aura\Dispatcher\Dispatcher;
 
-$dispatcher = new FactoryDispatcher;
+$dispatcher = new Dispatcher;
 ?>
 ```
 
