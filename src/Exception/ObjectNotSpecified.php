@@ -14,7 +14,7 @@ use Aura\Dispatcher\Exception;
 
 /**
  * 
- * The invokable object was not specified in the params.
+ * The dispatchable object was not specified in the params.
  * 
  * @package Aura.Dispatcher
  * 

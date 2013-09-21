@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Aura.Dispatcher library provides tools to map names to invokable objects
+The Aura.Dispatcher library provides tools to map names to dispatchable objects
 (whether closures or factories), then invoke those objects using named
 parameters. This is useful for invoking controller and command object methods
 based on path-info parameters or command line arguments.

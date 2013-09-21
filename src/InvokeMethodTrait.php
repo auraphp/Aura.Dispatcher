@@ -71,7 +71,7 @@ trait InvokeMethodTrait
         // sequential arguments when invoking
         $args = [];
         
-        // match named params with arguments
+        // match params with arguments
         foreach ($reflect->getParameters() as $i => $param) {
             if (isset($params[$param->name])) {
                 // a named param value is available

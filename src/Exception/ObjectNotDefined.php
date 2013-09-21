@@ -14,7 +14,7 @@ use Aura\Dispatcher\Exception;
 
 /**
  * 
- * The invokable object name has not been defined.
+ * The dispatchable object name has not been defined.
  * 
  * @package Aura.Dispatcher
  * 

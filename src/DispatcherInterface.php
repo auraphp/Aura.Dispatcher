@@ -21,7 +21,7 @@ interface DispatcherInterface
 {
     /**
      * 
-     * Uses the params to get an invokable object, then invokes it with the
+     * Uses the params to get an dispatchable object, then invokes it with the
      * same params.
      * 
      * @param array $params Named params for the invocation.
@@ -33,7 +33,7 @@ interface DispatcherInterface
     
     /**
      * 
-     * Sets the parameter indicating the invokable object name.
+     * Sets the parameter indicating the dispatchable object name.
      * 
      * @param string $object_param The parameter name to use.
      * 
@@ -44,7 +44,7 @@ interface DispatcherInterface
     
     /**
      * 
-     * Gets the parameter indicating the invokable object name.
+     * Gets the parameter indicating the dispatchable object name.
      * 
      * @return string
      * 
@@ -53,10 +53,41 @@ interface DispatcherInterface
     
     /**
      * 
-     * Set the array of invokable objects; this clears all existing objects.
+     * Sets the parameter indicating the dispatchable object name.
+     * 
+     * @param string $object_param The parameter name to use.
+     * 
+     * @return null
+     * 
+     */
+     
+    /**
+     * 
+     * Sets the parameter indicating the method to call on the created object.
+     * 
+     * @param string $method_param The parameter name to use.
+     * 
+     * @return null
+     * 
+     */
+    public function setMethodParam($method_param);
+    
+    /**
+     * 
+     * Gets the parameter indicating the method to call on the created object.
+     * 
+     * @return string
+     * 
+     */
+    public function getMethodParam();
+    
+    
+    /**
+     * 
+     * Set the array of dispatchable objects; this clears all existing objects.
      * 
      * @param array $objects An array where the key is a name and the value
-     * is an invokable object.
+     * is an dispatchable object.
      * 
      * @return null
      * 
@@ -65,11 +96,11 @@ interface DispatcherInterface
 
     /**
      * 
-     * Adds to the array of invokable objects; this merges with existing
+     * Adds to the array of dispatchable objects; this merges with existing
      * objects.
      * 
      * @param array $objects An array where the key is a name and the value
-     * is an invokable object.
+     * is an dispatchable object.
      * 
      * @return null
      * 
@@ -78,7 +109,7 @@ interface DispatcherInterface
     
     /**
      * 
-     * Returns the array of invokable objects.
+     * Returns the array of dispatchable objects.
      * 
      * @return array
      * 
@@ -87,20 +118,20 @@ interface DispatcherInterface
     
     /**
      * 
-     * Sets an invokable object by name.
+     * Sets an dispatchable object by name.
      * 
      * @param string $name The name.
      * 
-     * @param object $object The invokable object.
+     * @param object $object The dispatchable object.
      * 
      */
     public function setObject($name, $object);
     
     /**
      * 
-     * Does an invokable object exist?
+     * Does an dispatchable object exist?
      * 
-     * @param string $name The name of the invokable object.
+     * @param string $name The name of the dispatchable object.
      * 
      * @return bool
      * 
@@ -109,24 +140,24 @@ interface DispatcherInterface
     
     /**
      * 
-     * Returns an invokable object using its name.
+     * Returns an dispatchable object using its name.
      * 
-     * @param string $name The name of the invokable object.
+     * @param string $name The name of the dispatchable object.
      * 
      * @return object
      * 
      */
-    public function getObjectByName($name);
+    public function getObject($name);
     
     /**
      * 
-     * Returns an invokable object using an array of params; if the
+     * Returns an dispatchable object using an array of params; if the
      * `$object_param` is an object, it is returned directly, otherwise it is
-     * treated as an invokable object name.
+     * treated as an dispatchable object name.
      * 
-     * @param array $params Params to look up the invokable object.
+     * @param array $params Params to look up the dispatchable object.
      * 
-     * @return object The invokable object.
+     * @return object The dispatchable object.
      * 
      */
     public function getObjectByParams(array $params);

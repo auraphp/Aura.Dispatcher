@@ -5,7 +5,7 @@ class InvokeClosureTraitTest extends \PHPUnit_Framework_TestCase
 {
     use InvokeClosureTrait;
     
-    public function testInvokeClosure()
+    public function testInvokeClosure_namedParams()
     {
         $closure = function ($foo, $bar, $baz = 'baz') {
             return "$foo $bar $baz";
@@ -17,4 +17,18 @@ class InvokeClosureTraitTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertSame($expect, $actual);
     }
+    
+    public function testInvokeClosure_positionalParams()
+    {
+        $closure = function ($foo, $bar, $baz = 'baz') {
+            return "$foo $bar $baz";
+        };
+        $expect = 'FOO BAR baz';
+        $actual = $this->invokeClosure($closure, [
+            0 => 'FOO',
+            1 => 'BAR',
+        ]);
+        $this->assertSame($expect, $actual);
+    }
+    
 }

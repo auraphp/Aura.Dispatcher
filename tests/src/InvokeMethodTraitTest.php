@@ -37,7 +37,6 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->assertSame($expect, $actual);
-        
     }
 
     public function testInvokeMethod_protected()
@@ -105,5 +104,19 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
                 'bar' => 'BAR',
             ]
         );
+    }
+    
+    public function testInvokeMethod_positionalParams()
+    {
+        $object = new MockBase;
+        $expect = 'FOO BAR baz';
+        $actual = $object->exec(
+            'publicMethod',
+            [
+                0 => 'FOO',
+                1 => 'BAR',
+            ]
+        );
+        $this->assertSame($expect, $actual);
     }
 }
