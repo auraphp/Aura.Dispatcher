@@ -43,10 +43,13 @@ trait InvokeClosureTrait
         $args = [];
         
         // match named params with arguments
-        foreach ($reflect->getParameters() as $param) {
+        foreach ($reflect->getParameters() as $i => $param) {
             if (isset($params[$param->name])) {
                 // a named param value is available
                 $args[] = $params[$param->name];
+            } elseif (isset($params[$i])) {
+                // a positional param value is available
+                $args[] = $params[$i];
             } else {
                 // use the default value, or null if there is none
                 $args[] = $param->isDefaultValueAvailable()
