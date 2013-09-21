@@ -2,11 +2,13 @@
 
 ## Overview
 
-The Aura.Dispatcher library provides tools to map names to dispatchable
-objects, then dispatch to those objects using named parameters. This is useful
-for invoking controller and command object methods based on path-info
+The Aura.Dispatcher library provides tools to map arbitrary names to
+dispatchable objects, then dispatch to those objects using named parameters.
+This is useful for invoking controller and command objects based on path-info
 parameters or command line arguments, as well as dispatching to closure-based
 controllers and building the objects to be dispatched from factories.
+
+## Preliminaries
 
 ### Installation and Autoloading
 
@@ -17,13 +19,13 @@ set up autoloading automatically.
 Alternatively, download or clone this repository, then require or include its
 _autoload.php_ file.
 
-### Dependencies
+### Dependencies and PHP Version
 
 As with all Aura libraries, this library has no external dependencies.
 
 ### Tests
 
-[![Build Status](https://travis-ci.org/auraphp/Aura.Dispatcher.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Dispatcher)
+[![Build Status](https://travis-ci.org/auraphp/Aura.Dispatcher.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Autoload)
 
 This library has 100% code coverage. To run the library tests, first install
 [PHPUnit][], then go to the library _tests_ directory and issue `phpunit` at
@@ -31,42 +33,114 @@ the command line.
 
 [PHPUnit]: http://phpunit.de/manual/
 
-### API Documentation
-
-This library has embedded DocBlock API documentation. To generate the
-documentation in HTML, first install [PHPDocumentor][] or [ApiGen][], then go
-to the library directory and issue one of the following at the command line:
-
-    # for PHPDocumentor
-    phpdoc -d ./src/ -t /path/to/output/
-    
-    # for ApiGen
-    apigen --source=./src/ --destination=/path/to/output/
-
-You can then browse the HTML-formatted API documentation at _/path/to/output_.
-
-[PHPDocumentor]: http://phpdoc.org/docs/latest/for-users/installation.html
-[ApiGen]: http://apigen.org/#installation
-
 ### PSR Compliance
 
-This library is compliant with [PSR-1][] and [PSR-2][]. If you notice
-compliance oversights, please send a patch via pull request.
+This library attempts to comply with [PSR-1][], [PSR-2][], and [PSR-4][]. If
+you notice compliance oversights, please send a patch via pull request.
 
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
+[PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
+
+## Getting Started
+
+### Overview
+
+First, some sort of routing mechanism (e.g., [Aura.Router][] or a
+micro-framework router) creates an array of parameters.
+
+Those parameters then get passed to the dispatcher; it examines them and picks
+an object to invoke with those parameters.
+
+The dispatcher will examine the returned result from that first invocation;
+if the result is itself callable, the dispatcher will recusrively invoke the
+result until a non-callable is returned.
+
+When a non-callable result is returned, the dispatcher stops dispatching and
+returns that non-callable result.
 
 
-## Basic Usage
+### Embedded Closure In Params
+
+We begin with an array of parameters that has a closure embdded in them:
+
+```<?php
+$params = [
+    'controller' => function ($noun) {
+        return "Hello $noun!";
+    },
+    'noun' => 'World',
+];
+?>
+```
+
+Now we create a dispatcher that will examine the 'controller' param to
+determine what object to invoke. (Note that the param name can be anything you
+like; 'controller' is only an example.)
+
+```php
+<?php
+use Aura\Dispatcher\Dispatcher;
+
+$dispatcher = new Dispatcher;
+$dispatcher->setObjectParam('controller');
+?>
+```
+
+Finally, we will invoke the dispatcher with params:
+
+```php
+<?php
+$result = $dispatcher($params);
+echo $result; // Hello World!
+?>
+```
+
+What happened here? The dispatcher looked at the `controller` param and found
+a closure.  It then invoked that closure, matching the param names (in this
+case `'noun'`) with the clousre arguments (`$noun`) and returned the result.
+
+
+### Named Closure In Params
+
+Now let's do the same thing, except this time will we put the closure in the
+dispatcher instead of embedding it in the params.  Set a named object into
+the dispatcher using `setObject()`:
+
+```
+<?php
+$dispatcher->setObject('hello_noun', function ($noun) {
+    return "Hello $noun!";
+});
+?>
+```
+
+We can then dispatch to that named object by using the name as the value for
+the `controller` param:
+
+```
+<?php
+$params = [
+    'controller' => 'hello_noun',
+    'noun' => 'World';
+];
+
+$result = $dispatcher($params);
+echo $result; // Hello World!
+?>
+```
+
+### Named Invokable Object In Params
+
+### Named Object And Method In Params
+
+### Factoried Object And Method In Params
+
+### Basic Use Cases
 
 REWRITE THIS README ENTIRELY.
 
 Cover the following:
-
-- Dispatch using a param directly (i.e., the param is a closure, an object
-  with the right method, or an invokable object)
-
-- Dispatch using a closure named by a param
 
 - Building factories, whether by closures or by invokable object
 
