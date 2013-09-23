@@ -24,12 +24,12 @@ interface DispatcherInterface
      * Uses the params to get an dispatchable object, then invokes it with the
      * same params.
      * 
-     * @param array $params Named params for the invocation.
+     * @param array|ArrayAccess $params Named params for the invocation.
      * 
      * @return mixed The return from the invoked object.
      * 
      */
-    public function __invoke(array $params = []);
+    public function __invoke($params = []);
     
     /**
      * 
@@ -155,10 +155,11 @@ interface DispatcherInterface
      * `$object_param` is an object, it is returned directly, otherwise it is
      * treated as an dispatchable object name.
      * 
-     * @param array $params Params to look up the dispatchable object.
+     * @param array|ArrayAccess $params Params to look up the dispatchable
+     * object.
      * 
      * @return object The dispatchable object.
      * 
      */
-    public function getObjectByParams(array $params);
+    public function getObjectByParams($params);
 }
