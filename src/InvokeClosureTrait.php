@@ -28,13 +28,14 @@ trait InvokeClosureTrait
      * 
      * @param Closure $closure The closure to work with.
      * 
-     * @param array $params An array of key-value pairs to use as params for
-     * the method; the array keys are matched to the closure param names.
+     * @param array|ArrayAccess $params An array of key-value pairs to use as
+     * params for the method; the array keys are matched to the method param
+     * names.
      * 
      * @return mixed The return of the invoked closure.
      * 
      */
-    protected function invokeClosure(Closure $closure, array $params = [])
+    protected function invokeClosure(Closure $closure, $params = [])
     {
         // treat as a function; cf. https://bugs.php.net/bug.php?id=65432
         $reflect = new ReflectionFunction($closure);
