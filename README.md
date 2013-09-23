@@ -50,6 +50,9 @@ First, an external routing mechanism such as [Aura.Router][] or a
 micro-framework router creates an array of parameters or an object that
 implements [ArrayAccess][].
 
+[Aura.Router]: https://github.com/auraphp/Aura.Router
+[ArrayAccess]: http://php.net/ArrayAccess
+
 The parameters are then passed to the dispatcher. It examines them and picks
 an object to invoke with those parameters, optionally with a method determined
 by the parameters.
