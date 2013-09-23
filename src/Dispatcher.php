@@ -81,7 +81,7 @@ class Dispatcher implements DispatcherInterface
      * @return mixed The return from the invoked object.
      * 
      */
-    public function __invoke(array $params = [])
+    public function __invoke($params = [])
     {
         $object = $this->getObjectByParams($params);
         return $this->dispatch($object, $params);
@@ -100,7 +100,7 @@ class Dispatcher implements DispatcherInterface
      * @return The first non-dispatchable result.
      * 
      */
-    protected function dispatch($object, array $params = [])
+    protected function dispatch($object, $params = [])
     {
         $method = $this->getMethodByParams($params);
         if (is_callable([$object, $method])) {
@@ -274,7 +274,7 @@ class Dispatcher implements DispatcherInterface
      * @return object The dispatchable object.
      * 
      */
-    public function getObjectByParams(array $params)
+    public function getObjectByParams($params)
     {
         // do we have an object param available?
         $key = $this->getObjectParam();
