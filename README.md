@@ -108,7 +108,7 @@ The same goes for invokable objects. First, define a class with an
 <?php
 class InvokableBlog
 {
-    public function __invoke($noun)
+    public function __invoke($id)
     {
         return "Read blog entry $id";
     }
@@ -203,7 +203,7 @@ will invoke the closure directly.
 ```php
 <?php
 $params = [
-    'controller' => function ($noun) {
+    'controller' => function ($id) {
         return "Read blog entry $id";
     },
     'id' => 88,
