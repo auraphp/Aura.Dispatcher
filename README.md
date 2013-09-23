@@ -46,195 +46,453 @@ you notice compliance oversights, please send a patch via pull request.
 
 ### Overview
 
-First, some sort of routing mechanism (e.g., [Aura.Router][] or a
-micro-framework router) creates an array of parameters.
+First, an external routing mechanism such as [Aura.Router][] or a
+micro-framework router creates an array of parameters or an object that
+implements [ArrayAccess][].
 
-Those parameters then get passed to the dispatcher; it examines them and picks
-an object to invoke with those parameters.
+The parameters are then passed to the dispatcher. It examines them and picks
+an object to invoke with those parameters, optionally with a method determined
+by the parameters.
 
-The dispatcher will examine the returned result from that first invocation;
-if the result is itself callable, the dispatcher will recusrively invoke the
-result until a non-callable is returned.
+The dispatcher then examines the returned result from that first invocation;
+if the result is itself a dispatchable object, the dispatcher will recursively
+invoke the result until something other than a dispatchable object is
+returned.
 
-When a non-callable result is returned, the dispatcher stops dispatching and
-returns that non-callable result.
+When a non-dispatchable result is returned, the dispatcher stops dispatching
+and returns that non-callable result.
 
+### Closures and Invokable Objects
 
-### Embedded Closure In Params
-
-We begin with an array of parameters that has a closure embdded in them:
-
-```<?php
-$params = [
-    'controller' => function ($noun) {
-        return "Hello $noun!";
-    },
-    'noun' => 'World',
-];
-?>
-```
-
-Now we create a dispatcher that will examine the 'controller' param to
-determine what object to invoke. (Note that the param name can be anything you
-like; 'controller' is only an example.)
-
-```php
-<?php
-use Aura\Dispatcher\Dispatcher;
-
-$dispatcher = new Dispatcher;
-$dispatcher->setObjectParam('controller');
-?>
-```
-
-Finally, we will invoke the dispatcher with params:
-
-```php
-<?php
-$result = $dispatcher($params);
-echo $result; // Hello World!
-?>
-```
-
-What happened here? The dispatcher looked at the `controller` param and found
-a closure.  It then invoked that closure, matching the param names (in this
-case `'noun'`) with the clousre arguments (`$noun`) and returned the result.
-
-
-### Named Closure In Params
-
-Now let's do the same thing, except this time will we put the closure in the
-dispatcher instead of embedding it in the params.  Set a named object into
-the dispatcher using `setObject()`:
-
-```
-<?php
-$dispatcher->setObject('hello_noun', function ($noun) {
-    return "Hello $noun!";
-});
-?>
-```
-
-We can then dispatch to that named object by using the name as the value for
-the `controller` param:
-
-```
-<?php
-$params = [
-    'controller' => 'hello_noun',
-    'noun' => 'World';
-];
-
-$result = $dispatcher($params);
-echo $result; // Hello World!
-?>
-```
-
-### Named Invokable Object In Params
-
-### Named Object And Method In Params
-
-### Factoried Object And Method In Params
-
-### Basic Use Cases
-
-REWRITE THIS README ENTIRELY.
-
-Cover the following:
-
-- Building factories, whether by closures or by invokable object
-
-- Describe the recursive dispatch process
-  
-### Invoking Closures
-
-TBD.
- 
-### Adding Dispatchable Objects
-
-First, instantiate an `Dispatcher` as the central point for object
-creation and method invocation.
-
-```php
-<?php
-use Aura\Dispatcher\Dispatcher;
-
-$dispatcher = new Dispatcher;
-?>
-```
-
-Next, load it with factories that create objects.
-
-```php
-<?php
-$dispatcher->setObject('blog', function () {
-    return new \Vendor\Package\BlogController;
-});
-?>
-```
-
-Finally, given a set of params (e.g. from a web router), you can now use the
-dispatcher to create an object via its factory and invoke a method on the created
-object:
+First, we tell the dispatcher to examine the `controller` parameter to find
+the name of the object to dispatch to:
 
 ```php
 <?php
 $dispatcher->setObjectParam('controller');
-$dispatcher->setMethodParam('action');
+?>
+```
+
+Next, we set a closure object into the dispatcher using `setObject()`:
+
+```php
+<?php
+$dispatcher->setObject('blog', function ($id) {
+    return "Read blog entry $id";
+});
+?>
+```
+
+We can now dispatch to that closure by using the name as the value for
+the `controller` parameter:
+
+```php
+<?php
 $params = [
     'controller' => 'blog',
-    'action' => 'read',
-    'id' => '88'
+    'id' => 88,
 ];
+
 $result = $dispatcher($params);
-// equivalent to:
-// $blog_controller = new \Vendor\Package\BlogController;
-// $result = $blog_controller->read('88');
+echo $result; // Read blog entry 88
 ?>
 ```
 
-## Trait Usage
-
-Sometimes your classes will have an intercessory method that picks an action
-to run, either on itself or on another object. This library provides two
-traits to help with that: the _InvokeMethodTrait_ to invoke a method on an
-object using named parameters, and _InvokeClosureTrait_ to invoke a closure
-using named parameters.  (The _InvokeMethodTrait_ honors protected and private
-scopes.)
-
-### InvokeMethodTrait
+The same goes for invokable objects. First, define a class with an
+`__invoke()` method:
 
 ```php
 <?php
-namespace Vendor\Package;
-
-use Aura\Dispatcher\InvokeMethodTrait;
-
-class VendorPackageExecutor
+class InvokableBlog
 {
-    use InvokeMethodTrait;
-    
-    // $params = [
-    //      'action' => 'read',
-    //      'id' => 88,
-    // ];
-    public function __invoke(array $params)
+    public function __invoke($noun)
     {
-        if (! isset($params['action'])) {
-            $params['action'] = 'index';
-        }
-        $method = 'action' . $params['action'];
-        return $this->invokeMethod($params, $this, $method);
-    }
-    
-    protected function actionRead($id = null)
-    {
-        // ...
+        return "Read blog entry $id";
     }
 }
 ?>
 ```
 
-### InvokeClosureTrait
+Next, set an instance of the object into the dispatcher:
 
-TBD.
+```php
+<?php
+$dispatcher->set('blog', new InvokableBlog);
+?>
+```
+
+Finally, dispatch to the named invokable object (the parameters and logic are
+the same as above):
+
+```php
+<?php
+$params = [
+    'controller' => 'blog',
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+### Object Method
+
+We can tell the dispatcher to examine the params for a method to call on the
+object. This method will take precedence over the `__invoke()` method on an
+object, if such a method exists.
+
+First, tell the dispatcher to examine the value of the `action` param to find
+the name of the method it should invoke.
+
+```php
+<?php
+$dispatcher->setMethodParam('action');
+?>
+```
+
+Next, define the object we will dispatch to; note that the method is `read()`
+instead of `__invoke()`.
+
+```php
+<?php
+class Blog
+{
+    public function read($id)
+    {
+        return "Read blog entry $id";
+    }
+}
+?>
+```
+
+Then, we set the object into the dispatcher ...
+
+```php
+<?php
+$dispatcher->set('blog', new Blog);
+?>
+```
+
+... and finally, we invoke the dispatcher; we have added an `action` parameter
+with the name of the method to invoke:
+
+```php
+<?php
+$params = [
+    'controller' => 'blog',
+    'action' => 'read',
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+### Embedding Objects in Parameters
+
+If you like, you can place dispatchable objects in the parameters directly.
+(This is sometimes how micro-framework routers work.) For example, let's put
+a closure into the `controller` parameter; when we invoke the dispatcher, it
+will invoke the closure directly.
+
+```php
+<?php
+$params = [
+    'controller' => function ($noun) {
+        return "Read blog entry $id";
+    },
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+The same is true for invokable objects ...
+
+```php
+<?php
+$params = [
+    'controller' => new InvokableBlog,
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+... and for object-methods:
+
+
+```php
+<?php
+$params = [
+    'controller' => new Blog,
+    'action' => 'run',
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+
+### Lazy Loading
+
+The dispatcher is recursive. After dispatching to the first object, if that
+object returns a dispatchable object, the dispatcher will re-dispatch to that
+object. It will continue doing this until the returned result is not
+a dispatchable object.
+
+Let's turn the above example of an invokable object in the dispatcher into a
+lazy-loaded instantiation. All we have to do is wrap the instantiation in
+another dispatchable object (in this example, a closure). The benefit of this
+is that we can fill the dispatcher with as many objects as we like, and they
+won't get instantiated until the dispatcher calls on them.
+
+```php
+<?php
+$dispatcher->set('blog', function () {
+    return new Blog;
+});
+?>
+```
+
+Then we invoke the dispatcher with the same params as before.
+
+```php
+<?php
+$params = [
+    'controller' => 'blog',
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+What happens is this:
+
+- The dispatcher finds the 'blog' dispatchable object, sees that it
+  is a closure, and invokes it with the params.
+
+- The dispatcher examines the result, sees the result is a dispatchable object,
+  and invokes it with the params.
+
+- The dispatcher examines *that* result, sees that it is *not* a callable
+  object, and returns the result.
+
+
+## Refactoring From Less Complex To More Complex Architectures
+
+The dispatcher is sympathetic to the idea that some developers will start out
+with micro-framework architectures, and that the architecture will evolve
+over time toward a full-stack architecture.
+
+At first, the developer uses embedded closures:
+
+```php
+<?php
+$dispatcher->setObjectParam('controller');
+
+$params = [
+    'controller' => function ($id) {
+        return "Read blog post $id";
+    },
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+After adding several controllers, the developer is likely to want to put the
+routing configurations separate from the controller actions. At this point the
+developer may start putting the controller actions directly into the dispatcher:
+
+```php
+<?php
+$dispatcher->setObject('blog', function ($id) {
+    return "Read blog entry $id!";
+});
+
+$params = [
+    'controller' => 'blog',
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+As the number and complexity of controllers continues to grow, the developer
+may wish to put the controllers into their own classes, lazy-loading along the
+way:
+
+```php
+<?php
+class Blog
+{
+    public function __invoke($id)
+    {
+        return "Read blog entry $id";
+    }
+}
+
+$dispatcher->setObject('blog', function () {
+    return new Blog;
+});
+
+$params = [
+    'controller' => 'blog',
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+Finally, the developer may collect several actions into a single controller,
+keeping related functionality all the same class. At this point the developer
+should call `setMethodParam()` to tell the dispatcher what method to invoke
+on the dispatchable object.
+
+```php
+<?php
+class Blog
+{
+    public function browse()
+    {
+        // ...
+    }
+    
+    public function read($id)
+    {
+        return "Read blog entry $id";
+    }
+    
+    public function edit($id)
+    {
+        // ...
+    }
+    
+    public function add()
+    {
+        // ...
+    }
+    
+    public function delete($id)
+    {
+        // ...
+    }
+}
+
+$dispatcher->setMethodParam('action');
+
+$dispatcher->setObject('blog', function () {
+    return new Blog;
+});
+
+$params = [
+    'controller' => 'blog',
+    'action' => 'read',
+    'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
+
+## Construction-Based Configuration
+
+You can set all dispatchable objects, along with the controller parameter name
+and the method parameter name, at construction time. This makes it easier to
+configure the dispatcher object in a single call.
+
+```php
+<?php
+$controller_param = 'controller';
+$method_param = 'action';
+$objects = [
+    'blog' => function () {
+        return new BlogController;
+    },
+    'wiki' => function () {
+        return new WikiController;
+    },
+    'forum' => function () {
+        return new ForumController;
+    },
+];
+
+$dispatcher = new Dispatcher($object, $controller_param, $method_param);
+?>
+```
+
+## Intercessory Dispatch Methods
+
+Sometimes your classes will have an intercessory method that picks an action
+to run, either on itself or on another object. _Aura.Dispatcher_ provides an
+_InvokeMethodTrait_ to invoke a method on an object using named parameters.
+(The _InvokeMethodTrait_ honors protected and private scopes.)
+
+```php
+<?php
+use Aura\Dispatcher\InvokeMethodTrait;
+
+class Blog
+{
+    use InvokeMethodTrait;
+    
+    // uses a hypthetical Request object to examine the execution context
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+    
+    public function __invoke()
+    {
+        if (! isset($request->pathinfo['action'])) {
+            $request->pathinfo['action'] = 'index';
+        }
+        $method = 'action' . ucfirst($request->pathinfo['action']);
+        return $this->invokeMethod($request->pathinfo, $this, $method);
+    }
+    
+    protected function actionRead($id = null)
+    {
+        return "Read blog entry $id";
+    }
+}
+?>
+```
+
+You can then dispatch to the object as normal, and it will determine its
+own logical flow.
+
+```php
+<?php
+$dispatcher->setObject('blog', function () {
+    return new Blog;
+});
+
+$params = [
+     'controller' => 'blog',
+     'action' => 'read',
+     'id' => 88,
+];
+
+$result = $dispatcher($params);
+echo $result; // Read blog entry 88
+?>
+```
