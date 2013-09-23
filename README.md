@@ -245,7 +245,7 @@ echo $result; // Read blog entry 88
 ```
 
 
-### Lazy Loading
+### Recursion and Lazy Loading
 
 The dispatcher is recursive. After dispatching to the first object, if that
 object returns a dispatchable object, the dispatcher will re-dispatch to that
