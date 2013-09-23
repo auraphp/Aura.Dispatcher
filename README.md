@@ -96,7 +96,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -134,7 +134,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -188,7 +188,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -209,7 +209,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -223,7 +223,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -239,7 +239,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -275,7 +275,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -311,7 +311,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -331,7 +331,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -359,7 +359,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -411,7 +411,7 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
@@ -495,7 +495,7 @@ $params = [
      'id' => 88,
 ];
 
-$result = $dispatcher($params);
+$result = $dispatcher->__invoke($params);
 echo $result; // Read blog entry 88
 ?>
 ```
