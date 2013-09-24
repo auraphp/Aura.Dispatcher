@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Aura.Dispatcher library provides tools to map arbitrary names to
+The _Aura.Dispatcher_ library provides tools to map arbitrary names to
 dispatchable objects, then dispatch to those objects using named parameters.
 This is useful for invoking controller and command objects based on path-info
 parameters or command line arguments, as well as dispatching to closure-based
@@ -21,7 +21,8 @@ _autoload.php_ file.
 
 ### Dependencies and PHP Version
 
-As with all Aura libraries, this library has no external dependencies.
+As with all Aura libraries, this library has no external dependencies. It
+requires PHP version 5.4 or later.
 
 ### Tests
 
@@ -47,8 +48,8 @@ you notice compliance oversights, please send a patch via pull request.
 ### Overview
 
 First, an external routing mechanism such as [Aura.Router][] or a
-micro-framework router creates an array of parameters or an object that
-implements [ArrayAccess][].
+micro-framework router creates an array of parameters. (Alternatively, the
+parameters may be an object that implements [ArrayAccess][]).
 
 [Aura.Router]: https://github.com/auraphp/Aura.Router
 [ArrayAccess]: http://php.net/ArrayAccess
@@ -59,11 +60,11 @@ by the parameters.
 
 The dispatcher then examines the returned result from that first invocation.
 If the result is itself a dispatchable object, the dispatcher will recursively
-invoke the result until something other than a dispatchable object is
+dispatch the result until something other than a dispatchable object is
 returned.
 
 When a non-dispatchable result is returned, the dispatcher stops recursion and
-returns that non-dispatchable result.
+returns the non-dispatchable result.
 
 ### Closures and Invokable Objects
 
@@ -124,7 +125,7 @@ $dispatcher->set('blog', new InvokableBlog);
 ?>
 ```
 
-Finally, dispatch to the named invokable object (the parameters and logic are
+Finally, dispatch to the invokable object (the parameters and logic are
 the same as above):
 
 ```php
@@ -195,10 +196,10 @@ echo $result; // Read blog entry 88
 
 ### Embedding Objects in Parameters
 
-If you like, you can place dispatchable objects in the parameters directly.
-(This is sometimes how micro-framework routers work.) For example, let's put
-a closure into the `controller` parameter; when we invoke the dispatcher, it
-will invoke the closure directly.
+If you like, you can place dispatchable objects directly in the parameters.
+(This is often how micro-framework routers work.) For example, let's put a
+closure into the `controller` parameter; when we invoke the dispatcher, it
+will invoke that closure.
 
 ```php
 <?php
@@ -292,13 +293,13 @@ What happens is this:
   object, and returns the result.
 
 
-## Refactoring From Less Complex To More Complex Architectures
+## Refactoring To Architecture Changes
 
-The dispatcher is sympathetic to the idea that some developers will start out
-with micro-framework architectures, and that the architecture will evolve
-over time toward a full-stack architecture.
+The dispatcher is sympathetic to the idea that some developers will begin with
+micro-framework architectures, and evolve over time toward a full-stack
+architecture.
 
-At first, the developer uses embedded closures:
+At first, the developer uses closures embedded in the params:
 
 ```php
 <?php
@@ -316,9 +317,9 @@ echo $result; // Read blog entry 88
 ?>
 ```
 
-After adding several controllers, the developer is likely to want to put the
+After adding several controllers, the developer is likely to want to keep the
 routing configurations separate from the controller actions. At this point the
-developer may start putting the controller actions directly into the dispatcher:
+developer may start putting the controller actions in the dispatcher:
 
 ```php
 <?php
@@ -365,9 +366,9 @@ echo $result; // Read blog entry 88
 ```
 
 Finally, the developer may collect several actions into a single controller,
-keeping related functionality all the same class. At this point the developer
-should call `setMethodParam()` to tell the dispatcher what method to invoke
-on the dispatchable object.
+keeping related functionality in the same class. At this point the developer
+should call `setMethodParam()` to tell the dispatcher what method to invoke on
+the dispatchable object.
 
 ```php
 <?php
@@ -418,13 +419,13 @@ echo $result; // Read blog entry 88
 
 ## Construction-Based Configuration
 
-You can set all dispatchable objects, along with the controller parameter name
-and the method parameter name, at construction time. This makes it easier to
+You can set all dispatchable objects, along with the object parameter name and
+the method parameter name, at construction time. This makes it easier to
 configure the dispatcher object in a single call.
 
 ```php
 <?php
-$controller_param = 'controller';
+$object_param = 'controller';
 $method_param = 'action';
 $objects = [
     'blog' => function () {
@@ -438,7 +439,7 @@ $objects = [
     },
 ];
 
-$dispatcher = new Dispatcher($object, $controller_param, $method_param);
+$dispatcher = new Dispatcher($objects, $object_param, $method_param);
 ?>
 ```
 
@@ -465,11 +466,10 @@ class Blog
     
     public function __invoke()
     {
-        if (! isset($request->pathinfo['action'])) {
-            $request->pathinfo['action'] = 'index';
-        }
-        $method = 'action' . ucfirst($request->pathinfo['action']);
-        return $this->invokeMethod($request->pathinfo, $this, $method);
+        $params = $this->request->params;
+        $action = isset($params['action']) ? $params['action'] : 'index';
+        $method = 'action' . ucfirst($action);
+        return $this->invokeMethod($pathinfo, $this, $method);
     }
     
     protected function actionRead($id = null)
@@ -480,8 +480,8 @@ class Blog
 ?>
 ```
 
-You can then dispatch to the object as normal, and it will determine its
-own logical flow.
+You can then dispatch to the object as normal, and it will determine its own
+logical flow.
 
 ```php
 <?php
