@@ -60,6 +60,9 @@ class Dispatcher implements DispatcherInterface
      * @param string $object_param The param indicating the dispatchable
      * object name.
      * 
+     * @param string $object_param The param indicating the method to invoke
+     * on the dispatchable object.
+     * 
      */
     public function __construct(
         array $objects = [],
@@ -76,7 +79,7 @@ class Dispatcher implements DispatcherInterface
      * Uses the params to get a dispatchable object, then dispatches it using
      * the params.
      * 
-     * @param array $params Named params for the invocation.
+     * @param array|ArrayAccess $params Params for the invocation.
      * 
      * @return mixed The return from the invoked object.
      * 
@@ -95,7 +98,7 @@ class Dispatcher implements DispatcherInterface
      * 
      * @param mixed $object Dispatch to this object.
      * 
-     * @param array $params Invoke the method or closure with these params.
+     * @param array|ArrayAccess $params Params for the invocation.
      * 
      * @return The first non-dispatchable result.
      * 
@@ -269,7 +272,7 @@ class Dispatcher implements DispatcherInterface
      * `$object_param` is an object, it is returned directly, otherwise it is
      * treated as a dispatchable object name.
      * 
-     * @param array $params Params to look up the dispatchable object.
+     * @param array|ArrayAccess $params Params for the invocation.
      * 
      * @return object The dispatchable object.
      * 
@@ -301,14 +304,15 @@ class Dispatcher implements DispatcherInterface
      * 
      * Gets the method from the params.
      * 
+     * @param array|ArrayAccess $params Params for the invocation.
+     * 
      * @return mixed
      * 
      */
     public function getMethodByParams($params)
     {
-        $key = $this->method_param;
-        if (isset($params[$key])) {
-            return $params[$key];
+        if ($this->method_param && isset($params[$this->method_param])) {
+            return $params[$this->method_param];
         }
     }
 }

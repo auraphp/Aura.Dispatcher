@@ -57,13 +57,13 @@ The parameters are then passed to the dispatcher. It examines them and picks
 an object to invoke with those parameters, optionally with a method determined
 by the parameters.
 
-The dispatcher then examines the returned result from that first invocation;
-if the result is itself a dispatchable object, the dispatcher will recursively
+The dispatcher then examines the returned result from that first invocation.
+If the result is itself a dispatchable object, the dispatcher will recursively
 invoke the result until something other than a dispatchable object is
 returned.
 
-When a non-dispatchable result is returned, the dispatcher stops dispatching
-and returns that non-callable result.
+When a non-dispatchable result is returned, the dispatcher stops recursion and
+returns that non-dispatchable result.
 
 ### Closures and Invokable Objects
 
@@ -306,7 +306,7 @@ $dispatcher->setObjectParam('controller');
 
 $params = [
     'controller' => function ($id) {
-        return "Read blog post $id";
+        return "Read blog entry $id";
     },
     'id' => 88,
 ];
