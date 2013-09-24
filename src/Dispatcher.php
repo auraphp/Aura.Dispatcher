@@ -60,7 +60,7 @@ class Dispatcher implements DispatcherInterface
      * @param string $object_param The param indicating the dispatchable
      * object name.
      * 
-     * @param string $object_param The param indicating the method to invoke
+     * @param string $method_param The param indicating the method to invoke
      * on the dispatchable object.
      * 
      */
