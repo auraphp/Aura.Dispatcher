@@ -236,7 +236,7 @@ echo $result; // Read blog entry 88
 <?php
 $params = [
     'controller' => new Blog,
-    'action' => 'run',
+    'action' => 'read',
     'id' => 88,
 ];
 
