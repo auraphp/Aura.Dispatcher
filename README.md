@@ -121,7 +121,7 @@ Next, set an instance of the object into the dispatcher:
 
 ```php
 <?php
-$dispatcher->set('blog', new InvokableBlog);
+$dispatcher->setObject('blog', new InvokableBlog);
 ?>
 ```
 
@@ -174,7 +174,7 @@ Then, we set the object into the dispatcher ...
 
 ```php
 <?php
-$dispatcher->set('blog', new Blog);
+$dispatcher->setObject('blog', new Blog);
 ?>
 ```
 
@@ -261,7 +261,7 @@ won't get instantiated until the dispatcher calls on them.
 
 ```php
 <?php
-$dispatcher->set('blog', function () {
+$dispatcher->setObject('blog', function () {
     return new Blog;
 });
 ?>
