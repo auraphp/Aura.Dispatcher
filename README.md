@@ -8,7 +8,11 @@ dispatchable objects from factories.
 
 ## Foreword
 
-### Installation and Autoloading
+### Requirements
+
+This library requires PHP 5.4 or later, and has no userland dependencies.
+
+### Installation
 
 This library is installable and autoloadable via Composer with the following
 `require` element in your `composer.json` file:
@@ -19,11 +23,6 @@ This library is installable and autoloadable via Composer with the following
     
 Alternatively, download or clone this repository, then require or include its
 _autoload.php_ file.
-
-### Dependencies and PHP Version
-
-As with all Aura libraries, this library has no userland dependencies. It
-requires PHP version 5.4 or later.
 
 ### Tests
 
