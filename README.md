@@ -1,38 +1,38 @@
 # Aura.Dispatcher
 
-## Overview
+Provides tools to map arbitrary names to dispatchable objects, then to
+dispatch to those objects using named parameters. This is useful for invoking
+controller and command objects based on path-info parameters or command line
+arguments, for dispatching to closure-based controllers, and for building
+dispatchable objects from factories.
 
-The _Aura.Dispatcher_ library provides tools to map arbitrary names to
-dispatchable objects, then dispatch to those objects using named parameters.
-This is useful for invoking controller and command objects based on path-info
-parameters or command line arguments, as well as dispatching to closure-based
-controllers and building the objects to be dispatched from factories.
-
-## Preliminaries
+## Foreword
 
 ### Installation and Autoloading
 
-This library is installable via Composer and is registered on Packagist at
-<https://packagist.org/packages/aura/dispatcher>. Installing via Composer will
-set up autoloading automatically.
+This library is installable and autoloadable via Composer with the following
+`require` element in your `composer.json` file:
 
+    "require": {
+        "aura/dispatcher": "dev-develop-2"
+    }
+    
 Alternatively, download or clone this repository, then require or include its
 _autoload.php_ file.
 
 ### Dependencies and PHP Version
 
-As with all Aura libraries, this library has no external dependencies. It
+As with all Aura libraries, this library has no userland dependencies. It
 requires PHP version 5.4 or later.
 
 ### Tests
 
-[![Build Status](https://travis-ci.org/auraphp/Aura.Dispatcher.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Autoload)
+[![Build Status](https://travis-ci.org/auraphp/Aura.Dispatcher.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Dispatcher)
 
-This library has 100% code coverage. To run the library tests, first install
-[PHPUnit][], then go to the library _tests_ directory and issue `phpunit` at
-the command line.
+This library has 100% code coverage with [PHPUnit][]. To run the tests at the
+command line, go to the _tests_ directory and issue `phpunit`.
 
-[PHPUnit]: http://phpunit.de/manual/
+[phpunit]: http://phpunit.de/manual/
 
 ### PSR Compliance
 
@@ -42,6 +42,7 @@ you notice compliance oversights, please send a patch via pull request.
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
+
 
 ## Getting Started
 
@@ -54,30 +55,33 @@ parameters may be an object that implements [ArrayAccess][]).
 [Aura.Router]: https://github.com/auraphp/Aura.Router
 [ArrayAccess]: http://php.net/ArrayAccess
 
-The parameters are then passed to the dispatcher. It examines them and picks
+The parameters are then passed to the _Dispatcher_. It examines them and picks
 an object to invoke with those parameters, optionally with a method determined
 by the parameters.
 
-The dispatcher then examines the returned result from that first invocation.
-If the result is itself a dispatchable object, the dispatcher will recursively
-dispatch the result until something other than a dispatchable object is
-returned.
+The _Dispatcher_ then examines the returned result from that first invocation.
+If the result is itself a dispatchable object, the _Dispatcher_ will
+recursively dispatch the result until something other than a dispatchable
+object is returned.
 
-When a non-dispatchable result is returned, the dispatcher stops recursion and
-returns the non-dispatchable result.
+When a non-dispatchable result is returned, the _Dispatcher_ stops recursion
+and returns the non-dispatchable result.
 
 ### Closures and Invokable Objects
 
-First, we tell the dispatcher to examine the `controller` parameter to find
+First, we tell the _Dispatcher_ to examine the `controller` parameter to find
 the name of the object to dispatch to:
 
 ```php
 <?php
+use Aura\Dispatcher\Dispatcher;
+
+$dispatcher = new Dispatcher;
 $dispatcher->setObjectParam('controller');
 ?>
 ```
 
-Next, we set a closure object into the dispatcher using `setObject()`:
+Next, we set a closure object into the _Dispatcher_ using `setObject()`:
 
 ```php
 <?php
@@ -117,7 +121,7 @@ class InvokableBlog
 ?>
 ```
 
-Next, set an instance of the object into the dispatcher:
+Next, set an instance of the object into the _Dispatcher_:
 
 ```php
 <?php
@@ -142,12 +146,12 @@ echo $result; // Read blog entry 88
 
 ### Object Method
 
-We can tell the dispatcher to examine the params for a method to call on the
+We can tell the _Dispatcher_ to examine the params for a method to call on the
 object. This method will take precedence over the `__invoke()` method on an
 object, if such a method exists.
 
-First, tell the dispatcher to examine the value of the `action` param to find
-the name of the method it should invoke.
+First, tell the _Dispatcher_ to examine the value of the `action` param to
+find the name of the method it should invoke.
 
 ```php
 <?php
@@ -170,7 +174,7 @@ class Blog
 ?>
 ```
 
-Then, we set the object into the dispatcher ...
+Then, we set the object into the _Dispatcher_ ...
 
 ```php
 <?php
@@ -178,8 +182,8 @@ $dispatcher->set('blog', new Blog);
 ?>
 ```
 
-... and finally, we invoke the dispatcher; we have added an `action` parameter
-with the name of the method to invoke:
+... and finally, we invoke the _Dispatcher_; we have added an `action`
+parameter with the name of the method to invoke:
 
 ```php
 <?php
@@ -198,7 +202,7 @@ echo $result; // Read blog entry 88
 
 If you like, you can place dispatchable objects directly in the parameters.
 (This is often how micro-framework routers work.) For example, let's put a
-closure into the `controller` parameter; when we invoke the dispatcher, it
+closure into the `controller` parameter; when we invoke the _Dispatcher_, it
 will invoke that closure.
 
 ```php
@@ -248,16 +252,16 @@ echo $result; // Read blog entry 88
 
 ### Recursion and Lazy Loading
 
-The dispatcher is recursive. After dispatching to the first object, if that
-object returns a dispatchable object, the dispatcher will re-dispatch to that
-object. It will continue doing this until the returned result is not
-a dispatchable object.
+The _Dispatcher_ is recursive. After dispatching to the first object, if that
+object returns a dispatchable object, the _Dispatcher_ will re-dispatch to
+that object. It will continue doing this until the returned result is not a
+dispatchable object.
 
-Let's turn the above example of an invokable object in the dispatcher into a
+Let's turn the above example of an invokable object in the _Dispatcher_ into a
 lazy-loaded instantiation. All we have to do is wrap the instantiation in
 another dispatchable object (in this example, a closure). The benefit of this
-is that we can fill the dispatcher with as many objects as we like, and they
-won't get instantiated until the dispatcher calls on them.
+is that we can fill the _Dispatcher_ with as many objects as we like, and they
+won't get instantiated until the _Dispatcher_ calls on them.
 
 ```php
 <?php
@@ -283,20 +287,20 @@ echo $result; // Read blog entry 88
 
 What happens is this:
 
-- The dispatcher finds the 'blog' dispatchable object, sees that it
+- The _Dispatcher_ finds the 'blog' dispatchable object, sees that it
   is a closure, and invokes it with the params.
 
-- The dispatcher examines the result, sees the result is a dispatchable object,
-  and invokes it with the params.
+- The _Dispatcher_ examines the result, sees the result is a dispatchable
+  object, and invokes it with the params.
 
-- The dispatcher examines *that* result, sees that it is *not* a callable
+- The _Dispatcher_ examines *that* result, sees that it is *not* a callable
   object, and returns the result.
 
 
 ## Refactoring To Architecture Changes
 
-The dispatcher is sympathetic to the idea that some developers will begin with
-micro-framework architectures, and evolve over time toward a full-stack
+The _Dispatcher_ is built with the idea that some developers may begin with a
+micro-framework architecture, and evolve over time toward a full-stack
 architecture.
 
 At first, the developer uses closures embedded in the params:
@@ -319,7 +323,7 @@ echo $result; // Read blog entry 88
 
 After adding several controllers, the developer is likely to want to keep the
 routing configurations separate from the controller actions. At this point the
-developer may start putting the controller actions in the dispatcher:
+developer may start putting the controller actions in the _Dispatcher_:
 
 ```php
 <?php
@@ -367,8 +371,8 @@ echo $result; // Read blog entry 88
 
 Finally, the developer may collect several actions into a single controller,
 keeping related functionality in the same class. At this point the developer
-should call `setMethodParam()` to tell the dispatcher what method to invoke on
-the dispatchable object.
+should call `setMethodParam()` to tell the _Dispatcher_ where to find the
+method to invoke on the dispatchable object.
 
 ```php
 <?php
@@ -421,7 +425,7 @@ echo $result; // Read blog entry 88
 
 You can set all dispatchable objects, along with the object parameter name and
 the method parameter name, at construction time. This makes it easier to
-configure the dispatcher object in a single call.
+configure the _Dispatcher_ object in a single call.
 
 ```php
 <?php
