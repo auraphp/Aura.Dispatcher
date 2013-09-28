@@ -450,7 +450,7 @@ $dispatcher = new Dispatcher($objects, $object_param, $method_param);
 ## Intercessory Dispatch Methods
 
 Sometimes your classes will have an intercessory method that picks an action
-to run, either on itself or on another object. _Aura.Dispatcher_ provides an
+to run, either on itself or on another object. This package provides an
 _InvokeMethodTrait_ to invoke a method on an object using named parameters.
 (The _InvokeMethodTrait_ honors protected and private scopes.)
 
