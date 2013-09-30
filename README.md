@@ -469,7 +469,7 @@ class Blog
         $params = $this->request->params;
         $action = isset($params['action']) ? $params['action'] : 'index';
         $method = 'action' . ucfirst($action);
-        return $this->invokeMethod($pathinfo, $this, $method);
+        return $this->invokeMethod($this, $method, $params);
     }
     
     protected function actionRead($id = null)
