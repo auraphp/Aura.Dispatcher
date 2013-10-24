@@ -31,4 +31,34 @@ class InvokeClosureTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $actual);
     }
     
+    public function testInvokeClosure_directParams()
+    {
+        $closure = function (array $_params) {
+            return implode(' ', $_params);
+        };
+        $expect = 'foo bar baz';
+        $actual = $this->invokeClosure($closure, [
+            'foo' => 'foo',
+            'bar' => 'bar',
+            'baz' => 'baz',
+        ]);
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testInvokeClosure_paramNotSpecified()
+    {
+        $closure = function ($foo, $bar, $baz = 'baz') {
+            return "$foo $bar $baz";
+        };
+        
+        $this->setExpectedException(
+            'Aura\Dispatcher\Exception\ParamNotSpecified',
+            'Closure(1 : $bar)'
+        );
+        
+        $this->invokeClosure($closure, [
+                'foo' => 'foo',
+                'baz' => 'baz',
+        ]);
+    }
 }

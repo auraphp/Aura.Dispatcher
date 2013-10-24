@@ -10,6 +10,7 @@
  */
 namespace Aura\Dispatcher;
 
+use Aura\Dispatcher\Exception;
 use Closure;
 use ReflectionFunction;
 
@@ -45,17 +46,22 @@ trait InvokeClosureTrait
         
         // match params with arguments
         foreach ($reflect->getParameters() as $i => $param) {
-            if (isset($params[$param->name])) {
+            if ($param->name == '_params') {
+                // the special argument $_params receives $params directly
+                $args[] = $params;
+            } elseif (isset($params[$param->name])) {
                 // a named param value is available
                 $args[] = $params[$param->name];
             } elseif (isset($params[$i])) {
                 // a positional param value is available
                 $args[] = $params[$i];
+            } elseif ($param->isDefaultValueAvailable()) {
+                // use the default value
+                $args[] = $param->getDefaultValue();
             } else {
-                // use the default value, or null if there is none
-                $args[] = $param->isDefaultValueAvailable()
-                        ? $param->getDefaultValue()
-                        : null;
+                // no default value and no matching param
+                $message = "Closure($i : \${$param->name})";
+                throw new Exception\ParamNotSpecified($message);
             }
         }
         

@@ -120,8 +120,7 @@ class Dispatcher implements DispatcherInterface
             return $object;
         }
         
-        // recursively dispatch the result. note that the current dispatch
-        // may have modified the params.
+        // recursively dispatch the result.
         return $this->dispatch($result, $params);
     }
     

@@ -23,5 +23,10 @@ class MockBase
     private function privateMethod($foo, $bar, $baz = 'baz')
     {
         return "$foo $bar $baz";
-    }    
+    }
+    
+    public function directParams(array $_params)
+    {
+        return implode(' ', $_params);
+    }
 }

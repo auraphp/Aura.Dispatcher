@@ -119,4 +119,35 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertSame($expect, $actual);
     }
+    
+    public function testInvokeMethod_directParams()
+    {
+        $object = new MockBase;
+        $expect = 'foo bar baz';
+        $actual = $object->exec(
+            'directParams',
+            [
+                'foo' => 'foo',
+                'bar' => 'bar',
+                'baz' => 'baz',
+            ]
+        );
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testInvokeMethod_paramNotSpecified()
+    {
+        $object = new MockBase;
+        $this->setExpectedException(
+            'Aura\Dispatcher\Exception\ParamNotSpecified',
+            'Aura\Dispatcher\MockBase::publicMethod(1 : $bar)'
+        );
+        $object->exec(
+            'publicMethod',
+            [
+                'foo' => 'foo',
+                'baz' => 'baz',
+            ]
+        );
+    }
 }
