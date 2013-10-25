@@ -75,10 +75,7 @@ trait InvokeMethodTrait
         
         // match params with arguments
         foreach ($reflect->getParameters() as $i => $param) {
-            if ($param->name == '_params') {
-                // the special argument $_params receives $params directly
-                $args[] = $params;
-            } elseif (isset($params[$param->name])) {
+            if (isset($params[$param->name])) {
                 // a named param value is available
                 $args[] = $params[$param->name];
             } elseif (isset($params[$i])) {

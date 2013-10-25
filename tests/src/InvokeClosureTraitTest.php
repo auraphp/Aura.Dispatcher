@@ -33,15 +33,19 @@ class InvokeClosureTraitTest extends \PHPUnit_Framework_TestCase
     
     public function testInvokeClosure_directParams()
     {
-        $closure = function (array $_params) {
-            return implode(' ', $_params);
+        $closure = function (array $params) {
+            return "{$params['foo']} {$params['bar']} {$params['baz']}";
         };
-        $expect = 'foo bar baz';
-        $actual = $this->invokeClosure($closure, [
+        
+        $params = [
             'foo' => 'foo',
             'bar' => 'bar',
             'baz' => 'baz',
-        ]);
+        ];
+        $params['params'] =& $params;
+        
+        $expect = 'foo bar baz';
+        $actual = $this->invokeClosure($closure, $params);
         $this->assertSame($expect, $actual);
     }
     

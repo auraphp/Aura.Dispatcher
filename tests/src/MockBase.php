@@ -25,8 +25,8 @@ class MockBase
         return "$foo $bar $baz";
     }
     
-    public function directParams(array $_params)
+    public function directParams(array $params)
     {
-        return implode(' ', $_params);
+        return "{$params['foo']} {$params['bar']} {$params['baz']}";
     }
 }

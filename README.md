@@ -276,6 +276,7 @@ Then we invoke the dispatcher with the same params as before.
 <?php
 $params = [
     'controller' => 'blog',
+    'action' => 'read',
     'id' => 88,
 ];
 
@@ -295,6 +296,40 @@ What happens is this:
 - The _Dispatcher_ examines *that* result, sees that it is *not* a callable
   object, and returns the result.
 
+
+## Sending The Array Of Params Directly
+
+Sometimes you will want to send the entire array of parameters directly to the
+object method or closure, as opposed to matching parameter keys with function
+argument names. To do so, name a key in the parameters array for the argument
+name that will receive them, and then set the parameters array into itself
+using that name. If may be easier to do this by reference, or by copy,
+depending on your needs.
+
+```php
+<?php
+// a dispatchable closure that takes an array of params directly,
+// not the individual params by keys matching argument names
+$dispatcher->setObject('blog', function ($params_ref) {
+    return "Read blog entry {$params_ref['id']}"
+});
+
+// the initial params
+$params = [
+     'controller' => 'blog',
+     'action' => 'read',
+     'id' => 88,
+];
+
+// set a params reference into itself; this corresponds with the
+// 'params_ref' closure argument
+$params['params_ref'] =& $params;
+
+// dispatch
+$result = $dispatcher->__invoke($params);
+echo $result; // Read blog entry 88
+?>
+```
 
 ## Refactoring To Architecture Changes
 

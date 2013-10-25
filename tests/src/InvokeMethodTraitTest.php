@@ -123,15 +123,16 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     public function testInvokeMethod_directParams()
     {
         $object = new MockBase;
+        
+        $params = [
+            'foo' => 'foo',
+            'bar' => 'bar',
+            'baz' => 'baz',
+        ];
+        $params['params'] =& $params;
+        
         $expect = 'foo bar baz';
-        $actual = $object->exec(
-            'directParams',
-            [
-                'foo' => 'foo',
-                'bar' => 'bar',
-                'baz' => 'baz',
-            ]
-        );
+        $actual = $object->exec('directParams', $params);
         $this->assertSame($expect, $actual);
     }
     
