@@ -314,8 +314,8 @@ depending on your needs.
 <?php
 // a dispatchable closure that takes an array of params directly,
 // not the individual params by keys matching argument names
-$dispatcher->setObject('blog', function ($params_ref) {
-    return "Read blog entry {$params_ref['id']}"
+$dispatcher->setObject('blog', function ($params) {
+    return "Read blog entry {$params['id']}"
 });
 
 // the initial params
@@ -326,8 +326,8 @@ $params = [
 ];
 
 // set a params reference into itself; this corresponds with the
-// 'params_ref' closure argument
-$params['params_ref'] =& $params;
+// 'params' closure argument
+$params['params'] =& $params;
 
 // dispatch
 $result = $dispatcher->__invoke($params);
@@ -500,15 +500,8 @@ class Blog
 {
     use InvokeMethodTrait;
     
-    // uses a hypthetical Request object to examine the execution context
-    public function __construct(Request $request)
+    public function __invoke(array $params)
     {
-        $this->request = $request;
-    }
-    
-    public function __invoke()
-    {
-        $params = $this->request->params;
         $action = isset($params['action']) ? $params['action'] : 'index';
         $method = 'action' . ucfirst($action);
         return $this->invokeMethod($this, $method, $params);
