@@ -153,4 +153,15 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $expect = 'FOO BAR baz';
         $this->assertSame($expect, $actual);
     }
+    
+    public function testDispatch_namedObject()
+    {
+        $params = [
+            'foo' => 'FOO',
+            'bar' => 'BAR',
+        ];
+        $actual = $this->dispatcher->__invoke($params, 'invokable');
+        $expect = 'FOO BAR baz';
+        $this->assertSame($expect, $actual);
+    }
 }

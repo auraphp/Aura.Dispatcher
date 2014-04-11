@@ -81,12 +81,19 @@ class Dispatcher implements DispatcherInterface
      * 
      * @param array|ArrayAccess $params Params for the invocation.
      * 
+     * @param string $object_name Use an explicit object name instead of 
+     * getting it from the params.
+     * 
      * @return mixed The return from the invoked object.
      * 
      */
-    public function __invoke($params = [])
+    public function __invoke($params = [], $object_name = null)
     {
-        $object = $this->getObjectByParams($params);
+        if ($object_name) {
+            $object = $this->getObject($object_name);
+        } else {
+            $object = $this->getObjectByParams($params);
+        }
         return $this->dispatch($object, $params);
     }
     
