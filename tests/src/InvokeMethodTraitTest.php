@@ -7,7 +7,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     
     public function testInvokeMethod_notCallable()
     {
-        $object = new MockBase;
+        $object = new FakeBase;
         $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotDefined');
         $object->exec('noSuchMethod');
     }
@@ -15,7 +15,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     public function testInvokeMethod_public()
     {
         // works on base object
-        $object = new MockBase;
+        $object = new FakeBase;
         $expect = 'FOO BAR baz';
         $actual = $object->exec(
             'publicMethod',
@@ -27,7 +27,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $actual);
         
         // works on extended object
-        $object = new MockExtended;
+        $object = new FakeExtended;
         $expect = 'FOO BAR baz';
         $actual = $object->exec(
             'publicMethod',
@@ -42,7 +42,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     public function testInvokeMethod_protected()
     {
         // works on base object
-        $object = new MockBase;
+        $object = new FakeBase;
         $expect = 'FOO BAR baz';
         $actual = $object->exec(
             'protectedMethod',
@@ -54,7 +54,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $actual);
         
         // works on extended object
-        $object = new MockExtended;
+        $object = new FakeExtended;
         $expect = 'FOO BAR baz';
         $actual = $object->exec(
             'protectedMethod',
@@ -66,7 +66,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $actual);
         
         // fails on external call
-        $object = new MockExtended;
+        $object = new FakeExtended;
         $expect = 'FOO BAR baz';
         $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotAccessible');
         $actual = $this->invokeMethod(
@@ -82,7 +82,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     public function testInvokeMethod_private()
     {
         // works on base object
-        $object = new MockBase;
+        $object = new FakeBase;
         $expect = 'FOO BAR baz';
         $actual = $object->exec(
             'privateMethod',
@@ -94,7 +94,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $actual);
         
         // fails on extended object
-        $object = new MockExtended;
+        $object = new FakeExtended;
         $expect = 'FOO BAR baz';
         $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotAccessible');
         $actual = $object->exec(
@@ -108,7 +108,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     
     public function testInvokeMethod_positionalParams()
     {
-        $object = new MockBase;
+        $object = new FakeBase;
         $expect = 'FOO BAR baz';
         $actual = $object->exec(
             'publicMethod',
@@ -122,7 +122,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     
     public function testInvokeMethod_directParams()
     {
-        $object = new MockBase;
+        $object = new FakeBase;
         
         $params = [
             'foo' => 'foo',
@@ -138,10 +138,10 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     
     public function testInvokeMethod_paramNotSpecified()
     {
-        $object = new MockBase;
+        $object = new FakeBase;
         $this->setExpectedException(
             'Aura\Dispatcher\Exception\ParamNotSpecified',
-            'Aura\Dispatcher\MockBase::publicMethod(1 : $bar)'
+            'Aura\Dispatcher\FakeBase::publicMethod(1 : $bar)'
         );
         $object->exec(
             'publicMethod',

@@ -1,7 +1,7 @@
 <?php
 namespace Aura\Dispatcher;
 
-class MockBase
+class FakeBase
 {
     use InvokeMethodTrait;
     

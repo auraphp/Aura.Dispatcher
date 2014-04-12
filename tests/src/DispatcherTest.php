@@ -11,13 +11,13 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $this->objects = [
             'factory' => function () {
-                return new MockBase;
+                return new FakeBase;
             },
             'closure' => function ($foo, $bar, $baz = 'baz') {
                 return "$foo $bar $baz";
             },
             'invokable' => function () {
-                return new MockInvokable;
+                return new FakeInvokable;
             }
         ];
         
@@ -31,7 +31,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testGetSetHasEtc()
     {
         $foo = function () {
-            return new MockBase;
+            return new FakeBase;
         };
         
         $this->assertFalse($this->dispatcher->hasObject('foo'));
@@ -47,7 +47,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $actual);
         
         $bar = function () {
-            return new MockExtended;
+            return new FakeExtended;
         };
         
         $this->dispatcher->addObjects(['bar' => $bar]);
@@ -105,7 +105,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $params = [
             'controller' => function () {
-                return new MockBase;
+                return new FakeBase;
             },
             'action' => 'publicMethod',
             'foo' => 'FOO',

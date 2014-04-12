@@ -1,6 +1,6 @@
 <?php
 namespace Aura\Dispatcher;
 
-class MockExtended extends MockBase
+class FakeExtended extends FakeBase
 {
 }
