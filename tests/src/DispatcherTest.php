@@ -18,7 +18,10 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             },
             'invokable' => function () {
                 return new FakeInvokable;
-            }
+            },
+            'methodandinvoke' => function () {
+                return new FakeClassWithMethod;
+            }         
         ];
         
         $this->dispatcher = new Dispatcher(
@@ -162,6 +165,18 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         ];
         $actual = $this->dispatcher->__invoke($params, 'invokable');
         $expect = 'FOO BAR baz';
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testMethodExistsInvokable()
+    {
+        $params = [
+            'action' => 'someAction',
+            'controller' => 'methodandinvoke'
+        ];
+
+        $actual = $this->dispatcher->__invoke($params);
+        $expect = 'Hello World!';
         $this->assertSame($expect, $actual);
     }
 }
