@@ -50,16 +50,6 @@ interface DispatcherInterface
      * 
      */
     public function getObjectParam();
-    
-    /**
-     * 
-     * Sets the parameter indicating the dispatchable object name.
-     * 
-     * @param string $object_param The parameter name to use.
-     * 
-     * @return null
-     * 
-     */
      
     /**
      * 
