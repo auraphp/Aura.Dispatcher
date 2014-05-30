@@ -4,14 +4,14 @@ namespace Aura\Dispatcher;
 class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
 {
     use InvokeMethodTrait;
-    
+
     public function testInvokeMethod_notCallable()
     {
         $object = new FakeBase;
         $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotDefined');
         $object->exec('noSuchMethod');
     }
-    
+
     public function testInvokeMethod_public()
     {
         // works on base object
@@ -25,7 +25,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->assertSame($expect, $actual);
-        
+
         // works on extended object
         $object = new FakeExtended;
         $expect = 'FOO BAR baz';
@@ -52,7 +52,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->assertSame($expect, $actual);
-        
+
         // works on extended object
         $object = new FakeExtended;
         $expect = 'FOO BAR baz';
@@ -64,7 +64,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->assertSame($expect, $actual);
-        
+
         // fails on external call
         $object = new FakeExtended;
         $expect = 'FOO BAR baz';
@@ -78,7 +78,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
             ]
         );
     }
-    
+
     public function testInvokeMethod_private()
     {
         // works on base object
@@ -92,7 +92,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->assertSame($expect, $actual);
-        
+
         // fails on extended object
         $object = new FakeExtended;
         $expect = 'FOO BAR baz';
@@ -105,7 +105,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
             ]
         );
     }
-    
+
     public function testInvokeMethod_positionalParams()
     {
         $object = new FakeBase;
@@ -119,23 +119,23 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testInvokeMethod_directParams()
     {
         $object = new FakeBase;
-        
+
         $params = [
             'foo' => 'foo',
             'bar' => 'bar',
             'baz' => 'baz',
         ];
         $params['params'] =& $params;
-        
+
         $expect = 'foo bar baz';
         $actual = $object->exec('directParams', $params);
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testInvokeMethod_paramNotSpecified()
     {
         $object = new FakeBase;
