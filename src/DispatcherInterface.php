@@ -53,16 +53,6 @@ interface DispatcherInterface
 
     /**
      *
-     * Sets the parameter indicating the dispatchable object name.
-     *
-     * @param string $object_param The parameter name to use.
-     *
-     * @return null
-     *
-     */
-
-    /**
-     *
      * Sets the parameter indicating the method to call on the created object.
      *
      * @param string $method_param The parameter name to use.
