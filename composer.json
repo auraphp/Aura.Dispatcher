@@ -8,7 +8,7 @@
         "dispatcher",
         "factory"
     ],
-    "homepage": "https://github.com/auraphp/Aura.Dispatcher/releases",
+    "homepage": "https://github.com/auraphp/Aura.Dispatcher",
     "license": "BSD-2-Clause",
     "authors": [
         {
