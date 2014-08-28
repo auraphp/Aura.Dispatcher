@@ -18,8 +18,8 @@ Alternatively, [download a release](https://github.com/auraphp/Aura.Dispatcher/r
 
 ### Quality
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/badges/quality-score.png?s=1c48d6875376b3c07dacf201b30fe997adeb6d15)](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/)
-[![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/badges/coverage.png?s=7ab1aace65d9b423b8e65dfe43ecea69b1f092dc)](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/)
+[![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/)
 [![Build Status](https://travis-ci.org/auraphp/Aura.Dispatcher.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Dispatcher)
 
 To run the [PHPUnit][] tests at the command line, go to the _tests_ directory and issue `phpunit`.
@@ -410,22 +410,22 @@ class Blog
     {
         // ...
     }
-    
+
     public function read($id)
     {
         return "Read blog entry $id";
     }
-    
+
     public function edit($id)
     {
         // ...
     }
-    
+
     public function add()
     {
         // ...
     }
-    
+
     public function delete($id)
     {
         // ...
@@ -489,14 +489,14 @@ use Aura\Dispatcher\InvokeMethodTrait;
 class Blog
 {
     use InvokeMethodTrait;
-    
+
     public function __invoke(array $params)
     {
         $action = isset($params['action']) ? $params['action'] : 'index';
         $method = 'action' . ucfirst($action);
         return $this->invokeMethod($this, $method, $params);
     }
-    
+
     protected function actionRead($id = null)
     {
         return "Read blog entry $id";
