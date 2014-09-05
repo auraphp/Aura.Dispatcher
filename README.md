@@ -22,7 +22,7 @@ Alternatively, [download a release](https://github.com/auraphp/Aura.Dispatcher/r
 [![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/auraphp/Aura.Dispatcher/)
 [![Build Status](https://travis-ci.org/auraphp/Aura.Dispatcher.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Dispatcher)
 
-To run the unit tests at the command line, go to the _tests/unit_ directory and issue `./phpunit.sh`. (This requires [PHPUnit][] to be available as `phpunit`.)
+To run the unit tests at the command line, issue `phpunit -c tests/unit/`. (This requires [PHPUnit][] to be available as `phpunit`.)
 
 [PHPUnit]: http://phpunit.de/manual/
 
