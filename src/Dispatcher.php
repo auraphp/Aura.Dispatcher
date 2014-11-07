@@ -113,7 +113,7 @@ class Dispatcher implements DispatcherInterface
     protected function dispatch($object, $params = [])
     {
         $method = $this->getMethodByParams($params);
-        if (is_callable([$object, $method])) {
+        if (is_callable([$object, $method]) && method_exists($object, $method)) {
             // the object has the specified method
             $result = $this->invokeMethod($object, $method, $params);
         } elseif ($object instanceof Closure) {
