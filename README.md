@@ -95,8 +95,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -133,8 +133,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -187,8 +187,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -208,8 +208,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -222,8 +222,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -238,8 +238,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -275,8 +275,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -321,8 +321,8 @@ $params = [
 $params['params'] =& $params;
 
 // dispatch
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -345,8 +345,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -365,8 +365,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -393,8 +393,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -445,8 +445,8 @@ $params = [
     'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
 
@@ -521,7 +521,7 @@ $params = [
      'id' => 88,
 ];
 
-$result = $dispatcher->__invoke($params);
-echo $result; // Read blog entry 88
+$result = $dispatcher($params); // or call __invoke() directly
+echo $result; // "Read blog entry 88"
 ?>
 ```
