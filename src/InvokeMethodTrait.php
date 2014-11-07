@@ -43,9 +43,6 @@ trait InvokeMethodTrait
     {
         // is the method defined?
         if (! method_exists($object, $method)) {
-            if (method_exists($object, '__call')) {
-                return $object->__call($method, $params);
-            }
             $message = get_class($object) . '::' . $method;
             throw new Exception\MethodNotDefined($message);
         }
