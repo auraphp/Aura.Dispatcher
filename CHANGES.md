@@ -1,1 +1,1 @@
-This release modifies the testing structure and updates other support files.
+This release corrects the README to show the proper phpunit command.
