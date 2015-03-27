@@ -1,1 +1,1 @@
-This is a hygeine release to update the Readme and other support files.
+This release modifies the testing structure and updates other support files.
