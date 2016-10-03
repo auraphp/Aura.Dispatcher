@@ -1,1 +1,1 @@
-This release corrects the README to show the proper phpunit command.
+Hygiene release: update license year, and remove branch alias.
