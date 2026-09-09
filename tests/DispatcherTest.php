@@ -1,13 +1,13 @@
 <?php
 namespace Aura\Dispatcher;
 
-class DispatcherTest extends \PHPUnit_Framework_TestCase
+class DispatcherTest extends \Yoast\PHPUnitPolyfills\TestCases\TestCase
 {
     protected $dispatcher;
 
     protected $objects;
 
-    protected function setUp()
+    protected function set_up()
     {
         $this->objects = [
             'factory' => function () {
@@ -61,7 +61,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertSame($expect, $actual);
 
-        $this->setExpectedException('Aura\Dispatcher\Exception\ObjectNotDefined');
+        $this->expectException('Aura\Dispatcher\Exception\ObjectNotDefined');
         $this->dispatcher->getObject('NoSuchCallable');
     }
 
@@ -79,14 +79,14 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testDispatch_objectNotSpecified()
     {
         $params = [];
-        $this->setExpectedException('Aura\Dispatcher\Exception\ObjectNotSpecified');
+        $this->expectException('Aura\Dispatcher\Exception\ObjectNotSpecified');
         $this->dispatcher->__invoke($params);
     }
 
     public function testDispatch_objectNotDefined()
     {
         $params = ['controller' => 'undefined_object'];
-        $this->setExpectedException('Aura\Dispatcher\Exception\ObjectNotDefined');
+        $this->expectException('Aura\Dispatcher\Exception\ObjectNotDefined');
         $this->dispatcher->__invoke($params);
     }
 

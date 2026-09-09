@@ -1,7 +1,7 @@
 <?php
 namespace Aura\Dispatcher;
 
-class InvokeClosureTraitTest extends \PHPUnit_Framework_TestCase
+class InvokeClosureTraitTest extends \Yoast\PHPUnitPolyfills\TestCases\TestCase
 {
     use InvokeClosureTrait;
 
@@ -55,10 +55,8 @@ class InvokeClosureTraitTest extends \PHPUnit_Framework_TestCase
             return "$foo $bar $baz";
         };
 
-        $this->setExpectedException(
-            'Aura\Dispatcher\Exception\ParamNotSpecified',
-            'Closure(1 : $bar)'
-        );
+        $this->expectException('Aura\Dispatcher\Exception\ParamNotSpecified');
+        $this->expectExceptionMessage('Closure(1 : $bar)');
 
         $this->invokeClosure($closure, [
                 'foo' => 'foo',

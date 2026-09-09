@@ -1,14 +1,14 @@
 <?php
 namespace Aura\Dispatcher;
 
-class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
+class InvokeMethodTraitTest extends \Yoast\PHPUnitPolyfills\TestCases\TestCase
 {
     use InvokeMethodTrait;
 
     public function testInvokeMethod_notCallable()
     {
         $object = new FakeBase;
-        $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotDefined');
+        $this->expectException('Aura\Dispatcher\Exception\MethodNotDefined');
         $object->exec('noSuchMethod');
     }
 
@@ -68,7 +68,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         // fails on external call
         $object = new FakeExtended;
         $expect = 'FOO BAR baz';
-        $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotAccessible');
+        $this->expectException('Aura\Dispatcher\Exception\MethodNotAccessible');
         $actual = $this->invokeMethod(
             $object,
             'protectedMethod',
@@ -96,7 +96,7 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
         // fails on extended object
         $object = new FakeExtended;
         $expect = 'FOO BAR baz';
-        $this->setExpectedException('Aura\Dispatcher\Exception\MethodNotAccessible');
+        $this->expectException('Aura\Dispatcher\Exception\MethodNotAccessible');
         $actual = $object->exec(
             'privateMethod',
             [
@@ -139,10 +139,8 @@ class InvokeMethodTraitTest extends \PHPUnit_Framework_TestCase
     public function testInvokeMethod_paramNotSpecified()
     {
         $object = new FakeBase;
-        $this->setExpectedException(
-            'Aura\Dispatcher\Exception\ParamNotSpecified',
-            'Aura\Dispatcher\FakeBase::publicMethod(1 : $bar)'
-        );
+        $this->expectException('Aura\Dispatcher\Exception\ParamNotSpecified');
+        $this->expectExceptionMessage('Aura\Dispatcher\FakeBase::publicMethod(1 : $bar)');
         $object->exec(
             'publicMethod',
             [
