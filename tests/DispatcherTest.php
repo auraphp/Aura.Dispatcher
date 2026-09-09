@@ -1,13 +1,13 @@
 <?php
 namespace Aura\Dispatcher;
 
-class DispatcherTest extends \PHPUnit\Framework\TestCase
+class DispatcherTest extends \Yoast\PHPUnitPolyfills\TestCases\TestCase
 {
     protected $dispatcher;
 
     protected $objects;
 
-    protected function setUp(): void
+    protected function set_up()
     {
         $this->objects = [
             'factory' => function () {

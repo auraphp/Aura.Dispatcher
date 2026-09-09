@@ -1,7 +1,7 @@
 <?php
 namespace Aura\Dispatcher;
 
-class InvokeMethodTraitTest extends \PHPUnit\Framework\TestCase
+class InvokeMethodTraitTest extends \Yoast\PHPUnitPolyfills\TestCases\TestCase
 {
     use InvokeMethodTrait;
 

@@ -1,7 +1,7 @@
 <?php
 namespace Aura\Dispatcher;
 
-class InvokeClosureTraitTest extends \PHPUnit\Framework\TestCase
+class InvokeClosureTraitTest extends \Yoast\PHPUnitPolyfills\TestCases\TestCase
 {
     use InvokeClosureTrait;
 
